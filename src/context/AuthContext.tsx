@@ -12,7 +12,11 @@ interface AuthContextProps {
     logout: () => void;
 }
 
-export const AuthContext = createContext<AuthContextProps | null>(null);
+export const AuthContext = createContext<AuthContextProps>({
+    user: null,
+    login: () => null,
+    logout: () => null,
+});
 
 interface AuthContextProviderProps {
     children: ReactNode;
