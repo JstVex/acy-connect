@@ -1,5 +1,6 @@
 import { useCallback, useState, useContext } from "react";
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 type Variant = "login" | "register";
 
@@ -11,6 +12,7 @@ const Signin = () => {
     const [password, setPassword] = useState('');
 
     const { login } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const toggleVariant = useCallback(() => {
         if (variant === "login") {
@@ -43,6 +45,7 @@ const Signin = () => {
                 if (response.ok) {
                     const data = await response.json();
                     login(data);
+                    navigate('/all-groups');
                     console.log(data);
 
                 } else {
@@ -73,6 +76,7 @@ const Signin = () => {
                 if (response.ok) {
                     const data = await response.json();
                     login(data);
+                    navigate('/all-groups');
                     console.log(data);
                 } else {
                     const errorData = await response.json();
