@@ -2,13 +2,15 @@ import { FC, useEffect, useState } from 'react'
 import Event from './Event'
 import { UserModel } from '../types/models'
 import { GroupModel } from '../types/models'
+import { AuthUserModel } from '../types/models'
 
 interface GroupProps {
     group: GroupModel,
-    users: UserModel[]
+    users: UserModel[],
+    currentUser: AuthUserModel | null
 }
 
-const Group: FC<GroupProps> = ({ group, users }) => {
+const Group: FC<GroupProps> = ({ group, users, currentUser }) => {
     const [ownerName, setOwnerName] = useState('');
 
     useEffect(() => {
@@ -17,6 +19,26 @@ const Group: FC<GroupProps> = ({ group, users }) => {
             setOwnerName(owner.name);
         }
     }, [group.owner, users]);
+
+    const joinGroup = async () => {
+        try {
+            const response = await fetch('http://localhost:4080/groups/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user: currentUser?._id, id: group._id })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Updated group:', body)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <li className='flex flex-col ring-1 ring-zinc-900 rounded-md shadow-md my-5 p-3'>
@@ -45,7 +67,7 @@ const Group: FC<GroupProps> = ({ group, users }) => {
                     return <Event event={event} />
                 })}
             </div>
-            <button className='bg-amber-100 rounded-md px-3 py-2 w-28 mt-4'>
+            <button className='bg-amber-100 rounded-md px-3 py-2 w-28 mt-4' onClick={joinGroup}>
                 Join group
             </button>
         </li>
