@@ -1,16 +1,15 @@
-import { FC, useState, useContext } from 'react'
+import { FC, useState } from 'react'
 import Modal from '../ui/Modal'
 import { Input } from '../ui/Input'
-import { AuthContext } from '../../context/AuthContext'
+import { AuthUserModel } from '../../types/models'
 
 interface CreateNewGroupModalProps {
     isOpen?: boolean,
     onClose: () => void,
+    user: AuthUserModel | null
 }
 
-const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, onClose }) => {
-    const { user } = useContext(AuthContext);
-
+const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, onClose, user }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
