@@ -4,6 +4,7 @@ interface User {
     _id: string;
     name?: string;
     email: string;
+    token: string;
 }
 
 interface AuthContextProps {
@@ -23,7 +24,10 @@ interface AuthContextProviderProps {
 }
 
 export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(() => {
+        const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+        return storedUser;
+    });
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
@@ -38,6 +42,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
     const login = (userData: User) => {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', userData.token);
     };
 
     const logout = () => {
