@@ -4,12 +4,13 @@ import { Input } from '../ui/Input'
 import { AuthUserModel } from '../../types/models'
 
 interface CreateNewGroupModalProps {
-    isOpen?: boolean,
-    onClose: () => void,
+    isOpen?: boolean;
+    setIsOpen: (value: boolean) => void;
+    onClose: () => void;
     user: AuthUserModel | null
 }
 
-const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, onClose, user }) => {
+const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, setIsOpen, onClose, user }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
@@ -41,6 +42,7 @@ const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, onClose, us
 
             if (response.ok) {
                 const data = await response.json();
+                setIsOpen(false);
                 console.log(data);
 
             } else {

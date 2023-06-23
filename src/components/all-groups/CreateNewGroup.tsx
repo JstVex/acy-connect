@@ -10,7 +10,7 @@ const CreateNewGroup: FC<CreateNewGroupProps> = ({ user }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <>
-            <CreateNewGroupModal isOpen={isOpen} onClose={() => setIsOpen(false)} user={user} />
+            <CreateNewGroupModal isOpen={isOpen} setIsOpen={setIsOpen} onClose={() => setIsOpen(false)} user={user} />
             <button onClick={() => setIsOpen(true)}>
                 Create a new group
             </button>
