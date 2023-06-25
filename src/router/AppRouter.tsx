@@ -9,6 +9,7 @@ import Connections from '../pages/Connections';
 import Events from '../pages/Events';
 import Signin from '../pages/Signin';
 import Me from '../pages/Me';
+import User from '../pages/User';
 
 function AppRouter() {
     const { user } = useContext(AuthContext);
@@ -43,6 +44,11 @@ function AppRouter() {
                             <Me />
                         </ProtectedRoute>}
                     />
+                    <Route path='/connections/:userId' element={
+                        <ProtectedRoute>
+                            <User />
+                        </ProtectedRoute>
+                    } />
                     <Route path="/signin" element={<Signin />} />
                 </Routes>
             </div>
