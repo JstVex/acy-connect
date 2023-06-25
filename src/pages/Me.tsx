@@ -1,8 +1,9 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState, useContext } from 'react'
 import { UserModel, GroupModel } from '../types/models'
 import { Settings } from 'lucide-react'
 import SettingsModal from '../components/me/SettingsModal'
 import Group from '../components/Group'
+import { AuthContext } from '../context/AuthContext'
 
 interface MeProps {
     props?: string
@@ -11,6 +12,8 @@ interface MeProps {
 const Me: FC<MeProps> = () => {
     const [user, setUser] = useState<UserModel | null>(null);
     const [isOpen, setIsOpen] = useState(false);
+
+    const { logout } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -80,6 +83,9 @@ const Me: FC<MeProps> = () => {
                 <div className='my-3 text-lg'>
                     Have made {user.connections?.length} connections
                 </div>
+                <button onClick={logout}>
+                    Logout
+                </button>
             </div>
         </>
 
