@@ -10,6 +10,7 @@ export interface UserModel {
     activeDay?: string
     groups?: GroupModel[]
     connections: any[]
+    events?: EventModel[]
 }
 
 export interface AuthUserModel {
@@ -35,4 +36,14 @@ export interface ConnectionModel {
     _id: string;
     user: string;
     connections: UserModel[];
+}
+
+export interface EventModel {
+    _id: string;
+    title: string;
+    description?: string;
+    date: string;
+    time?: string;
+    group: string;
+    participants: [];
 }
