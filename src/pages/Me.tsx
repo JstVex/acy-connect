@@ -2,7 +2,7 @@ import { FC, useEffect, useState, useContext } from 'react'
 import { UserModel, GroupModel } from '../types/models'
 import { Settings } from 'lucide-react'
 import SettingsModal from '../components/me/SettingsModal'
-import Group from '../components/Group'
+// import Group from '../components/Group'
 import { AuthContext } from '../context/AuthContext'
 
 interface MeProps {
@@ -50,7 +50,12 @@ const Me: FC<MeProps> = () => {
             <SettingsModal isOpen={isOpen} setIsOpen={setIsOpen} onClose={() => setIsOpen(false)} user={user} />
             <div className='w-full max-h-screen overflow-y-auto p-3 ' >
                 <div className='flex items-center gap-x-5'>
-                    <img src={user.image} alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square rounded-full' />
+                    {user.image ? (
+                        <img src={user.image} alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
+                    ) : (
+                        <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
+                    )}
+
                     <div className='flex flex-col'>
                         <div className='text-2xl'>
                             {user.name}
