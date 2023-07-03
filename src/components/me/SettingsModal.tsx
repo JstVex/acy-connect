@@ -1,6 +1,5 @@
-import { FC, useState } from 'react'
+import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import Modal from '../ui/Modal'
-import { Input } from '../ui/Input'
 import { UserModel } from '../../types/models';
 import ProfileInput from '../ui/ProfileInput';
 
@@ -22,7 +21,15 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
         activeDay: user?.activeDay,
     });
 
-    const handleSubmit = async (e: any) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setProfile((prevProfile) => ({
+            ...prevProfile,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try {
@@ -31,13 +38,13 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(profile)
+                body: JSON.stringify({ profile: profile })
             });
 
             if (response.ok) {
                 const data = await response.json();
                 console.log('successfully updates user data', data)
-                // setIsOpen(false)
+                setIsOpen(false)
             }
         } catch (error) {
             console.error('Error updating user data:', error);
@@ -54,48 +61,58 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
             </p>
             <form className='mt-6 flex flex-col gap-y-0' onSubmit={handleSubmit}>
                 <ProfileInput
-                    label="Name"
-                    id="name"
-                    disabled={false}
-                    value={profile.name || ''}
-                    setValue={setProfile}
+                    id='name'
+                    name='name'
+                    label='Name'
+                    type='text'
+                    value={profile.name}
+                    onChange={handleInputChange}
+                    placeholder='Name'
                 />
                 <ProfileInput
-                    label="Image"
-                    id="image"
-                    disabled={false}
-                    value={profile.image || ''}
-                    setValue={setProfile}
+                    id='image'
+                    name='image'
+                    label='Image'
+                    type='text'
+                    value={profile.image}
+                    onChange={handleInputChange}
+                    placeholder='Image'
                 />
                 <ProfileInput
-                    label="Bio"
-                    id="bio"
-                    disabled={false}
-                    value={profile.bio || ''}
-                    setValue={setProfile}
-                    required
+                    id='bio'
+                    name='bio'
+                    label='Bio'
+                    type='text'
+                    value={profile.bio}
+                    onChange={handleInputChange}
+                    placeholder='Bio'
                 />
                 <ProfileInput
-                    label="Hobbies"
-                    id="hobbies"
-                    disabled={false}
-                    value={profile.hobbies || ''}
-                    setValue={setProfile}
+                    id='hobbies'
+                    name='hobbies'
+                    label='Hobbies'
+                    type='text'
+                    value={profile.hobbies}
+                    onChange={handleInputChange}
+                    placeholder='Hobbies'
                 />
                 <ProfileInput
-                    label="Active Day"
-                    id="activeDay"
-                    disabled={false}
-                    value={profile.activeDay || ''}
-                    setValue={setProfile}
+                    id='activeDay'
+                    name='activeDay'
+                    label='Active Day at ACY'
+                    type='text'
+                    value={profile.activeDay}
+                    onChange={handleInputChange}
+                    placeholder='Active day'
                 />
                 <ProfileInput
-                    label="Facebook link"
-                    id="fblink"
-                    disabled={false}
-                    value={profile.fblink || ''}
-                    setValue={setProfile}
-                    required
+                    id='fblink'
+                    name='fblink'
+                    label='Facebook Link'
+                    type='text'
+                    value={profile.fblink}
+                    onChange={handleInputChange}
+                    placeholder='Facebook link'
                 />
                 <button type='submit' className='bg-amber-100 px-2 py-1.5 rounded-md mt-5 w-20'>
                     Confirm
