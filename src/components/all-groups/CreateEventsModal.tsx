@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import Modal from '../ui/Modal';
-import clsx from 'clsx';
+import ProfileInput from '../ui/ProfileInput';
 
 interface CreateEventsModalProps {
     isOpen?: boolean;
@@ -63,66 +63,42 @@ const CreateEventsModal: FC<CreateEventsModalProps> = ({ isOpen, setIsOpen, onCl
                 Create an event for a specific date
             </p>
             <form className='mt-5' onSubmit={handleSubmit}>
-                <div className="my-1">
-                    <label htmlFor='title' className="block text-sm font-medium leading-6 text-zinc-900">
-                        Title
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id='title'
-                            name='title'
-                            value={event.title}
-                            onChange={handleInputChange}
-                            placeholder='Title'
-                            className={clsx("block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6")}
-                        />
-                    </div>
-                </div>
-                <div className="my-1">
-                    <label htmlFor='description' className="block text-sm font-medium leading-6 text-zinc-900">
-                        Description
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id='description'
-                            name='description'
-                            value={event.description}
-                            onChange={handleInputChange}
-                            placeholder='Description'
-                            className={clsx("block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6")}
-                        />
-                    </div>
-                </div>
-                <div className="my-1">
-                    <label htmlFor='date' className="block text-sm font-medium leading-6 text-zinc-900">
-                        Date
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id='date'
-                            name='date'
-                            value={event.date}
-                            onChange={handleInputChange}
-                            placeholder='Date'
-                            className={clsx("block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6")}
-                        />
-                    </div>
-                </div>
-                <div className="my-1">
-                    <label htmlFor='time' className="block text-sm font-medium leading-6 text-zinc-900">
-                        Time
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            id='time'
-                            name='time'
-                            value={event.time}
-                            onChange={handleInputChange}
-                            placeholder='Time'
-                            className={clsx("block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6")}
-                        />
-                    </div>
-                </div>
+                <ProfileInput
+                    id='title'
+                    name='title'
+                    label='Title'
+                    type='text'
+                    value={event.title}
+                    onChange={handleInputChange}
+                    placeholder='Title'
+                />
+                <ProfileInput
+                    id='description'
+                    name='description'
+                    label='Description'
+                    type='text'
+                    value={event.description}
+                    onChange={handleInputChange}
+                    placeholder='Description'
+                />
+                <ProfileInput
+                    id='date'
+                    name='date'
+                    label='Date'
+                    type='text'
+                    value={event.date}
+                    onChange={handleInputChange}
+                    placeholder='Date'
+                />
+                <ProfileInput
+                    id='time'
+                    name='time'
+                    label='Time'
+                    type='text'
+                    value={event.time}
+                    onChange={handleInputChange}
+                    placeholder='Time'
+                />
                 <button type='submit' className='bg-amber-100 px-2 py-1.5 rounded-md mt-5 w-20'>
                     Create
                 </button>
