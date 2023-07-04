@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useEffect, useState } from 'react';
 import { UserModel } from '../types/models';
+import clsx from 'clsx';
+import { X, Menu } from 'lucide-react';
 
 function Sidebar() {
-    const { logout } = useContext(AuthContext);
-    const [user, setUser] = useState<UserModel | null>(null)
+    const [user, setUser] = useState<UserModel | null>(null);
 
-    const handleLogout = () => {
-        logout();
-    }
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -37,35 +39,69 @@ function Sidebar() {
     }, [])
 
     return (
-        <nav className='w-60 h-screen bg-amber-100 p-3 flex flex-col'>
-            <h4 className='mb-5'>
-                Acy Connect
-            </h4>
-            <ul className='flex flex-col divide-y-2 divide-amber-800'>
-                <li>
-                    <Link to="/groups">All Groups</Link>
-                </li>
-                <li>
-                    <Link to="/my-groups">My Groups</Link>
-                </li>
-                <li>
-                    <Link to="/connections">Connections</Link>
-                </li>
-                <li>
-                    <Link to="/events">Events</Link>
-                </li>
-            </ul>
-            <Link className='mt-auto flex items-center gap-x-3' to="/me">
-                {user?.image ? (
-                    <img src={user?.image} alt="pfp" className='w-auto h-auto max-w-[48px] max-h-[48px] aspect-square rounded-full' />
-                ) : (
-                    <img src="/src/assests/placeholder.jpeg" alt="placeholder" className='w-auto h-auto max-w-[48px] max-h-[48px] aspect-square rounded-full' />
+        <div className={clsx('relative flex')}>
+            <nav className={clsx('h-screen shadow-sm shadow-amber-950 bg-amber-100 pt-3 flex flex-col', isOpen ? 'absolute sm:relative w-screen sm:w-60' : 'w-0', 'transition-all duration-300 ease-in-out')}>
+                <h4 className={clsx('text-2xl px-3 text-amber-800 mb-5 font-semibold', isOpen ? 'opacity-100' : 'opacity-0', 'transition-opacity duration-100 ease-in-out')}>
+                    Acy Connect
+                </h4>
+                <ul className={clsx('flex flex-col text-lg px-3', isOpen ? 'opacity-100' : 'opacity-0', 'transition-opacity duration-100 ease-in-out')}>
+                    <li className="py-1 border-b-2 border-amber-800">
+                        <Link to="/groups">All Groups</Link>
+                    </li>
+                    <li className="py-1 border-b-2 border-amber-800">
+                        <Link to="/my-groups">My Groups</Link>
+                    </li>
+                    <li className="py-1 border-b-2 border-amber-800">
+                        <Link to="/connections">Connections</Link>
+                    </li>
+                    <li className="py-1 border-b-2 border-amber-800">
+                        <Link to="/events">Events</Link>
+                    </li>
+                    <li className="py-1">
+                        <Link to="/notifications">Notifications</Link>
+                    </li>
+                </ul>
+
+                <Link className={clsx('mt-auto flex items-center py-2 px-3 gap-x-3 bg-amber-900', isOpen ? 'opacity-100' : 'opacity-0', 'transition-opacity duration-100 ease-in-out')} to="/me">
+                    {user?.image ? (
+                        <img src={user?.image} alt="pfp" className='w-auto h-auto max-w-[48px] max-h-[48px] aspect-square object-cover rounded-full' />
+                    ) : (
+                        <img src="/src/assets/placeholder.jpeg" alt="placeholder" className='w-auto h-auto max-w-[48px] max-h-[48px] aspect-square object-cover rounded-full' />
+                    )}
+                    <div>
+                        <div className='text-lg text-white'>
+                            {user?.name}
+                        </div>
+                        <div className='text-xs font-light text-white'>
+                            {user?.email}
+                        </div>
+                    </div>
+                </Link>
+                <button
+                    className={clsx(
+                        'absolute block sm:hidden shadow-sm shadow-amber-950 -translate-y-1/2 transform mt-auto p-1 rounded-full transition-all duration-300 ease-in-out',
+                        'translate-x-full text-amber-100 bg-amber-800 right-10',
+                        'top-5',
+                        'z-10'
+                    )}
+                    onClick={toggleMenu}
+                >
+                    {isOpen ? <X /> : <Menu />}
+                </button>
+            </nav>
+            <button
+                className={clsx(
+                    'absolute shadow-sm shadow-amber-950 -translate-y-1/2 transform mt-auto p-1 rounded-full transition-all duration-300 ease-in-out',
+                    isOpen ? 'hidden sm:block' : '',
+                    'translate-x-full text-amber-100 bg-amber-800 right-4',
+                    'top-5',
+                    'z-10'
                 )}
-                <div className='text-lg'>
-                    {user?.name}
-                </div>
-            </Link>
-        </nav>
+                onClick={toggleMenu}
+            >
+                {isOpen ? <X /> : <Menu />}
+            </button>
+        </div>
     );
 }
 
