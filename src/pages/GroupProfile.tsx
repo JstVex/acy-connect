@@ -19,7 +19,9 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
     const [user, setUser] = useState<UserModel | null>(null);
     const [mutualFriends, setMutualFriends] = useState<UserModel[]>([]);
-    const [events, setEvents] = useState<EventModel[]>([])
+    const [events, setEvents] = useState<EventModel[]>([]);
+
+    const [isMember, setIsMember] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -51,6 +53,10 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setGroup(data)
+
+                    const isCurrentUserMember = data.members.some((member: any) => member._id === user?._id);
+                    setIsMember(isCurrentUserMember);
+                    console.log('member', isMember)
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -88,7 +94,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
         fetchGroup();
         fetchMutualFriends();
         fetchEvents();
-    }, [groupId, user?._id])
+    }, [groupId, user?._id, isMember])
 
     // useEffect(() => {
     //     console.log('user connections', user?.connections)
@@ -102,15 +108,6 @@ const GroupProfile: FC<GroupProfileProps> = () => {
     if (group === null || user === null) {
         return <div>Loading...</div>;
     }
-
-    // console.log('user is', user)
-    // const userConnections = user.connections.map((connection) => connection.toString());
-    // console.log('userconnections', userConnections)
-    // const groupMembers = group.members.map(member => member._id.toString());
-    // console.log('groupmembers', groupMembers)
-    // const mutualFriends = groupMembers.filter(memberId => userConnections.includes(memberId));
-
-    // console.log('mutual friends', mutualFriends)
 
     return (
         <>
@@ -153,9 +150,13 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                         </h3>
                     )
                     }
-                    <button className='text-amber-600 ml-auto' onClick={() => setEventsModalIsOpen(true)}>
-                        Create an event
-                    </button>
+
+                    {isMember && (
+                        <button className='text-amber-600 ml-auto' onClick={() => setEventsModalIsOpen(true)}>
+                            Create an event
+                        </button>
+                    )}
+
                 </div>
                 <ul>
                     {events.map((event) => {
