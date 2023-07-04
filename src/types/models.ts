@@ -29,7 +29,7 @@ export interface GroupModel {
     place: string;
     groupLink: string;
     members: UserModel[];
-    events: string[];
+    events: EventModel[];
 }
 
 export interface ConnectionModel {
@@ -45,5 +45,5 @@ export interface EventModel {
     date: string;
     time?: string;
     group: string;
-    participants: [];
+    participants: UserModel[];
 }
