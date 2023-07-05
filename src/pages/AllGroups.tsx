@@ -11,6 +11,8 @@ interface AllGroupsProps {
 
 const AllGroups: FC<AllGroupsProps> = () => {
     const [groups, setGroups] = useState<GroupModel[]>([]);
+    const [filteredGroups, setFilteredGroups] = useState<GroupModel[]>(groups);
+    const [searchValue, setSearchValue] = useState('');
 
     const { user } = useContext(AuthContext);
 
@@ -28,14 +30,23 @@ const AllGroups: FC<AllGroupsProps> = () => {
         fetchGroups();
     }, [user?._id])
 
+    useEffect(() => {
+        if (searchValue.trim() === '') {
+            setFilteredGroups([]);
+        }
+    }, [searchValue]);
+
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
             <div className='flex gap-x-4'>
-                <SearchBar />
+                <SearchBar setFiltered={setFilteredGroups} filterField={groups} setSearchValue={setSearchValue} filterBy={'title'} placeholder={'Search groups'} />
                 <CreateNewGroup user={user} />
             </div>
-            <ul>
-                {groups?.map((group) => {
+            {searchValue.trim() !== '' && filteredGroups.length === 0 && (
+                <p className='text-lg mt-3 text-gray-500'>There is no group with the title you are searching for.</p>
+            )}
+            <ul className='mt-5 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-5'>
+                {(searchValue.trim() === '' ? groups : filteredGroups).map(group => {
                     return <Group key={group._id} group={group} currentUser={user} />
                 })}
             </ul>
