@@ -18,6 +18,10 @@ const Connections: FC<ConnectionsProps> = () => {
     const [users, setUsers] = useState<UserModel[]>([]);
     const [connections, setConnections] = useState<ConnectionModel[]>([]);
 
+    const [filteredUsers, setFilteredUsers] = useState<UserModel[]>(users);
+    const [filteredConnections, setFilteredConnections] = useState<ConnectionModel[]>(connections);
+    const [searchValue, setSearchValue] = useState('');
+
     const { user } = useContext(AuthContext);
     const userId = user?._id;
 
@@ -57,29 +61,33 @@ const Connections: FC<ConnectionsProps> = () => {
     }, [userId])
 
     useEffect(() => {
-        console.log('connections', connections);
-    }, [connections]);
+        if (searchValue.trim() === '') {
+            setFilteredUsers([]);
+        }
+    }, [searchValue]);
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
-            <SearchBar />
+            <SearchBar setFiltered={setFilteredUsers} filterField={users} setFiltered2={setFilteredConnections} filterField2={connections} setSearchValue={setSearchValue} filterBy={'name'} placeholder={'Search connections'} />
             <h3 className='text-xl mt-5'>
                 Your connections
             </h3>
+            {searchValue.trim() !== '' && filteredConnections.length === 0 && (
+                <p className='text-lg mt-3 text-gray-500'>There is no user with the name you are searching for.</p>
+            )}
             <ul>
-                {/* {connections?.connections?.map((connection) => {
-                    return <Connection key={connection._id} user={connection} />
-                })} */}
-                {connections.map((connection) => {
+                {(searchValue.trim() === '' ? connections : filteredConnections).map(connection => {
                     return <Connection key={connection.connectionId} user={connection.connectedUser} />
                 })}
-
             </ul>
             <h3 className='text-xl mt-5'>
                 All available members
             </h3>
+            {searchValue.trim() !== '' && filteredUsers.length === 0 && (
+                <p className='text-lg mt-3 text-gray-500'>There is no user with the name you are searching for.</p>
+            )}
             <ul>
-                {users.map((connectingUser) => {
+                {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
                     return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
                 })}
             </ul>
