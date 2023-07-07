@@ -11,6 +11,16 @@ export interface UserModel {
     groups?: GroupModel[]
     connections: any[]
     events?: EventModel[]
+    notifications?: {
+        type: string;
+        content: string;
+        sender: string;
+        recipient: string;
+        group?: string;
+        event?: string;
+        status: 'unread' | 'read' | 'approved' | 'declined';
+        createdAt: Date;
+    }[]
 }
 
 export interface AuthUserModel {
