@@ -2,6 +2,7 @@ import { ChangeEvent, FC, FormEvent, useState } from 'react'
 import Modal from '../ui/Modal'
 import { UserModel } from '../../types/models';
 import ProfileInput from '../ui/ProfileInput';
+import { useNavigate } from 'react-router-dom';
 
 interface SettingsModalProps {
     isOpen?: boolean;
@@ -11,6 +12,7 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, user }) => {
+    const navigate = useNavigate();
     const [profile, setProfile] = useState({
         email: user?.email,
         name: user?.name,
@@ -45,6 +47,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
                 const data = await response.json();
                 console.log('successfully updates user data', data)
                 setIsOpen(false)
+                navigate(0)
             }
         } catch (error) {
             console.error('Error updating user data:', error);
