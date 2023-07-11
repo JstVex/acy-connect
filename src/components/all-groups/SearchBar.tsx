@@ -9,9 +9,9 @@ interface ConnectionModel {
 
 interface SearchBarProps {
     setFiltered: Dispatch<SetStateAction<GroupModel[]>> | Dispatch<SetStateAction<UserModel[]>>;
-    setFiltered2?: Dispatch<SetStateAction<ConnectionModel[]>>;
+    setFiltered2?: Dispatch<SetStateAction<ConnectionModel[]>> | Dispatch<SetStateAction<GroupModel[]>>;
     filterField: GroupModel[] | UserModel[];
-    filterField2?: ConnectionModel[];
+    filterField2?: ConnectionModel[] | GroupModel[];
     setSearchValue: Dispatch<SetStateAction<string>>;
     filterBy: string;
     placeholder: string;
@@ -28,6 +28,11 @@ const SearchBar: FC<SearchBarProps> = ({ setFiltered, setFiltered2, filterField,
             if (filterBy === 'title') {
                 const filtered = (filterField as GroupModel[]).filter((field) => field.title.toLowerCase().includes(value.toLowerCase()));
                 setFiltered(filtered as SetStateAction<GroupModel[]> & SetStateAction<UserModel[]>);
+                if (setFiltered2) {
+                    const filtered2 = (filterField2 as GroupModel[]).filter((field) => field.title.toLowerCase().includes(value.toLowerCase()));
+                    setFiltered2(filtered2 as SetStateAction<GroupModel[]> &
+                        SetStateAction<ConnectionModel[]>);
+                }
             }
 
             if (filterBy === 'name') {
@@ -35,7 +40,8 @@ const SearchBar: FC<SearchBarProps> = ({ setFiltered, setFiltered2, filterField,
                 setFiltered(filtered as SetStateAction<GroupModel[]> & SetStateAction<UserModel[]>);
                 if (setFiltered2) {
                     const filtered2 = (filterField2 as ConnectionModel[]).filter((field) => field.connectedUser.name.toLowerCase().includes(value.toLowerCase()));
-                    setFiltered2(filtered2);
+                    setFiltered2(filtered2 as SetStateAction<GroupModel[]> &
+                        SetStateAction<ConnectionModel[]>);
                 }
 
             }
