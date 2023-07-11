@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { UserModel } from '../types/models';
+import Notification from '../components/notifications/Notification';
 
 interface NotificationsProps {
     props?: any;
@@ -24,6 +25,7 @@ const Notifications: FC<NotificationsProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data)
+                    console.log('user data is', data)
                 }
 
             } catch (error) {
@@ -41,11 +43,9 @@ const Notifications: FC<NotificationsProps> = () => {
             <h2 className='text-3xl font-semibold '>
                 Notifications
             </h2>
-            <ul>
+            <ul className='flex flex-col'>
                 {user.notifications?.map((noti) => {
-                    return <li>
-                        {noti.content}
-                    </li>
+                    return <Notification notification={noti} user={user} />
                 })}
             </ul>
         </div>
