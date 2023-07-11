@@ -8,14 +8,14 @@ interface NonMutualListProps {
 }
 
 const NonMutualList: FC<NonMutualListProps> = ({ member, currentUser }) => {
-    const handleConnect = async () => {
+    const sendRequest = async () => {
         try {
-            const response = await fetch('http://localhost:4080/connections', {
-                method: 'POST',
+            const response = await fetch('http://localhost:4080/users/friendrequest', {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user1Id: currentUser?._id, user2Id: member._id })
+                body: JSON.stringify({ senderId: currentUser?._id, recipientId: member._id })
             })
 
             if (response.ok) {
@@ -23,9 +23,16 @@ const NonMutualList: FC<NonMutualListProps> = ({ member, currentUser }) => {
                 console.log('Successful connection created', data)
             }
         } catch (error) {
-            console.error('Error creating connection', error)
+            console.error('Error sending connection request', error)
         }
     }
+
+    const friendRequest = member.notifications?.some((notification) => {
+        return notification.type === 'connection_request' &&
+            notification.sender === currentUser?._id &&
+            notification.recipient === member._id
+    })
+
     return (
         <li className='flex'>
             <Link to={`/connections/${member._id}`} className='flex items-center gap-x-2'>
@@ -39,9 +46,16 @@ const NonMutualList: FC<NonMutualListProps> = ({ member, currentUser }) => {
                     {member.name}
                 </div>
             </Link>
-            <div className='ml-auto text-amber-600 cursor-pointer' onClick={handleConnect}>
-                connect
-            </div>
+
+            {friendRequest ? (
+                <div className='ml-auto text-amber-600'>
+                    requested
+                </div>
+            ) : (
+                <div className='ml-auto text-amber-600 cursor-pointer' onClick={sendRequest}>
+                    connect
+                </div>
+            )}
         </li>
     )
 }
