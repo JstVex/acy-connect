@@ -11,13 +11,14 @@ import Signin from '../pages/Signin';
 import Me from '../pages/Me';
 import User from '../pages/User';
 import GroupProfile from '../pages/GroupProfile';
+import Notifications from '../pages/Notifications';
 
 function AppRouter() {
     const { user } = useContext(AuthContext);
 
     return (
         <Router>
-            <div className='flex'>
+            <div className='flex gap-x-2 bg-amber-50'>
                 {user && <Sidebar />}
                 <Routes>
                     <Route path="/groups" element={
@@ -38,6 +39,11 @@ function AppRouter() {
                     <Route path="/events" element={
                         <ProtectedRoute>
                             <Events />
+                        </ProtectedRoute>}
+                    />
+                    <Route path="/notifications" element={
+                        <ProtectedRoute>
+                            <Notifications />
                         </ProtectedRoute>}
                     />
                     <Route path="/me" element={
