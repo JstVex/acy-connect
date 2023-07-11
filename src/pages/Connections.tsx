@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext'
 import { UserModel } from '../types/models'
 import Suggestion from '../components/connections/Suggestion'
 import Connection from '../components/connections/Connection'
+import Tabs from '../components/Tabs'
 
 interface ConnectionsProps {
     props?: string
@@ -25,10 +26,11 @@ const Connections: FC<ConnectionsProps> = () => {
     const { user } = useContext(AuthContext);
     const userId = user?._id;
 
+    const [activeTab, setActiveTab] = useState("Your connections");
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                // const response = await fetch(`http://localhost:4080/users/exceptcurrent?userId=${userId}`)
                 const response = await fetch(`http://localhost:4080/users/notconnect?userId=${userId}`)
 
                 if (response.ok) {
@@ -48,7 +50,6 @@ const Connections: FC<ConnectionsProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setConnections(data)
-                    // console.log('connections', connections)
                 }
 
             } catch (error) {
@@ -69,7 +70,33 @@ const Connections: FC<ConnectionsProps> = () => {
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
             <SearchBar setFiltered={setFilteredUsers} filterField={users} setFiltered2={setFilteredConnections} filterField2={connections} setSearchValue={setSearchValue} filterBy={'name'} placeholder={'Search connections'} />
-            <h3 className='text-xl mt-5'>
+            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} firstTitle='Your connections' secondTitle='Other users'>
+                {activeTab === 'Your connections' ? (
+                    <>
+                        {searchValue.trim() !== '' && filteredConnections.length === 0 && (
+                            <p className='text-lg mt-3 text-gray-500'>
+                                There is no user with the name you are searching for.
+                            </p>
+                        )}
+                        {(searchValue.trim() === '' ? connections : filteredConnections).map(connection => {
+                            return <Connection key={connection.connectionId} user={connection.connectedUser} />
+                        })}
+                    </>
+
+                ) : (
+                    <>
+                        {searchValue.trim() !== '' && filteredUsers.length === 0 && (
+                            <p className='text-lg mt-3 text-gray-500'>
+                                There is no user with the name you are searching for.
+                            </p>
+                        )}
+                        {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
+                            return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
+                        })}
+                    </>
+                )}
+            </Tabs>
+            {/* <h3 className='text-xl mt-5'>
                 Your connections
             </h3>
             {searchValue.trim() !== '' && filteredConnections.length === 0 && (
@@ -90,7 +117,7 @@ const Connections: FC<ConnectionsProps> = () => {
                 {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
                     return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
                 })}
-            </ul>
+            </ul> */}
         </div>
     )
 }
