@@ -3,6 +3,7 @@ import SearchBar from '../components/all-groups/SearchBar'
 import { GroupModel } from '../types/models'
 import OwnedGroup from '../components/my-groups/OwnedGroup'
 import JoinedGroup from '../components/my-groups/JoinedGroup'
+import Tabs from '../components/Tabs'
 
 interface MyGroupsProps {
     props?: string
@@ -15,6 +16,8 @@ const MyGroups: FC<MyGroupsProps> = () => {
     const [filteredOwnedGroups, setFilteredOwnedGroups] = useState<GroupModel[]>(ownedGroups);
     const [filteredJoinedGroups, setFilteredJoinedGroups] = useState<GroupModel[]>(joinedGroups);
     const [searchValue, setSearchValue] = useState('');
+
+    const [activeTab, setActiveTab] = useState("Owned Groups");
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -63,42 +66,41 @@ const MyGroups: FC<MyGroupsProps> = () => {
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
             <SearchBar setFiltered={setFilteredOwnedGroups} filterField={ownedGroups} setFiltered2={setFilteredJoinedGroups} filterField2={joinedGroups} setSearchValue={setSearchValue} filterBy={'title'} placeholder={'Search groups'} />
-            <h3 className='text-xl mt-5'>
-                Owned Groups
-            </h3>
-            {searchValue.trim() !== '' && filteredOwnedGroups.length === 0 && (
-                <p className='text-lg mt-3 text-gray-500'>
-                    There is no group with the title you are searching for.
-                </p>
-            )}
-            {ownedGroups.length === 0 && searchValue.trim() === '' && (
-                <div className='mt-3 my-10 font-light'>
-                    You haven't created any group yet.
-                </div>
-            )}
-            <ul>
-                {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
-                    return <OwnedGroup key={ownedGroup._id} group={ownedGroup} />
-                })}
-            </ul>
-            <h3 className='text-xl mt-5'>
-                Joined Groups
-            </h3>
-            {searchValue.trim() !== '' && filteredJoinedGroups.length === 0 && (
-                <p className='text-lg mt-3 text-gray-500'>
-                    There is no group with the title you are searching for.
-                </p>
-            )}
-            {joinedGroups.length === 0 && searchValue.trim() === '' && (
-                <div className='mt-3 my-10 font-light'>
-                    You haven't joined any group yet.
-                </div>
-            )}
-            <ul>
-                {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
-                    return <JoinedGroup key={joinedGroup._id} group={joinedGroup} />
-                })}
-            </ul>
+            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} firstTitle='Owned Groups' secondTitle='Joined Groups'>
+                {activeTab === 'Owned Groups' ? (
+                    <>
+                        {searchValue.trim() !== '' && filteredOwnedGroups.length === 0 && (
+                            <p className='text-lg mt-3 text-gray-500'>
+                                There is no group with the title you are searching for.
+                            </p>
+                        )}
+                        {ownedGroups.length === 0 && searchValue.trim() === '' && (
+                            <div className='mt-3 my-10 font-light'>
+                                You haven't created any group yet.
+                            </div>
+                        )}
+                        {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
+                            return <OwnedGroup key={ownedGroup._id} group={ownedGroup} />
+                        })}
+                    </>
+                ) : (
+                    <>
+                        {searchValue.trim() !== '' && filteredJoinedGroups.length === 0 && (
+                            <p className='text-lg mt-3 text-gray-500'>
+                                There is no group with the title you are searching for.
+                            </p>
+                        )}
+                        {joinedGroups.length === 0 && searchValue.trim() === '' && (
+                            <div className='mt-3 my-10 font-light'>
+                                You haven't joined any group yet.
+                            </div>
+                        )}
+                        {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
+                            return <JoinedGroup key={joinedGroup._id} group={joinedGroup} />
+                        })}
+                    </>
+                )}
+            </Tabs>
         </div>
     )
 }
