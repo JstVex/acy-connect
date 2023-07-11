@@ -12,6 +12,10 @@ const MyGroups: FC<MyGroupsProps> = () => {
     const [ownedGroups, setOwnedGroups] = useState<GroupModel[]>([]);
     const [joinedGroups, setJoinedGroups] = useState<GroupModel[]>([]);
 
+    const [filteredOwnedGroups, setFilteredOwnedGroups] = useState<GroupModel[]>(ownedGroups);
+    const [filteredJoinedGroups, setFilteredJoinedGroups] = useState<GroupModel[]>(joinedGroups);
+    const [searchValue, setSearchValue] = useState('');
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -49,31 +53,49 @@ const MyGroups: FC<MyGroupsProps> = () => {
         fetchUser();
     }, [])
 
-    console.log('owned groups', ownedGroups);
-    console.log('joined groups', joinedGroups)
+    useEffect(() => {
+        if (searchValue.trim() === '') {
+            setFilteredOwnedGroups([]);
+            setFilteredJoinedGroups([]);
+        }
+    }, [searchValue]);
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
-            <SearchBar />
+            <SearchBar setFiltered={setFilteredOwnedGroups} filterField={ownedGroups} setFiltered2={setFilteredJoinedGroups} filterField2={joinedGroups} setSearchValue={setSearchValue} filterBy={'title'} placeholder={'Search groups'} />
             <h3 className='text-xl mt-5'>
                 Owned Groups
             </h3>
-            {ownedGroups.length === 0 && (
-                <div className='mt-3 my-10 font-light'>You haven't created any group yet.</div>
+            {searchValue.trim() !== '' && filteredOwnedGroups.length === 0 && (
+                <p className='text-lg mt-3 text-gray-500'>
+                    There is no group with the title you are searching for.
+                </p>
+            )}
+            {ownedGroups.length === 0 && searchValue.trim() === '' && (
+                <div className='mt-3 my-10 font-light'>
+                    You haven't created any group yet.
+                </div>
             )}
             <ul>
-                {ownedGroups.map((ownedGroup) => {
+                {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
                     return <OwnedGroup key={ownedGroup._id} group={ownedGroup} />
                 })}
             </ul>
             <h3 className='text-xl mt-5'>
                 Joined Groups
             </h3>
-            {joinedGroups.length === 0 && (
-                <div className='mt-3 my-10 font-light'>You haven't joined any group yet.</div>
+            {searchValue.trim() !== '' && filteredJoinedGroups.length === 0 && (
+                <p className='text-lg mt-3 text-gray-500'>
+                    There is no group with the title you are searching for.
+                </p>
+            )}
+            {joinedGroups.length === 0 && searchValue.trim() === '' && (
+                <div className='mt-3 my-10 font-light'>
+                    You haven't joined any group yet.
+                </div>
             )}
             <ul>
-                {joinedGroups.map((joinedGroup) => {
+                {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
                     return <JoinedGroup key={joinedGroup._id} group={joinedGroup} />
                 })}
             </ul>
