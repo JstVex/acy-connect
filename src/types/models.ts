@@ -12,6 +12,7 @@ export interface UserModel {
     connections: any[]
     events?: EventModel[]
     notifications?: {
+        _id: string;
         type: string;
         content: string;
         sender: string;
