@@ -84,6 +84,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setEvents(data);
+                    console.log('events are', events)
                 }
             } catch (error) {
                 console.log('Error fetching events', error)
@@ -111,56 +112,62 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
     return (
         <>
-            <MembersModal isOpen={membersModalIsOpen} setIsOpen={setMembersModalIsOpen} onClose={() => setMembersModalIsOpen(false)} members={group.members} currentUser={user} mutual={mutualFriends} />
+            <MembersModal isOpen={membersModalIsOpen} onClose={() => setMembersModalIsOpen(false)} members={group.members} currentUser={user} mutual={mutualFriends} />
             <CreateEventsModal isOpen={eventsModalIsOpen} setIsOpen={setEventsModalIsOpen} onClose={() => setEventsModalIsOpen(false)} groupId={groupId} />
-            <div className='w-full max-h-screen overflow-y-auto p-3'>
-                <div className='flex items-center'>
-                    <h3 className='text-3xl capitalize font-semibold'>
+            <div className="w-full max-h-screen overflow-y-auto p-3">
+                <div className="flex items-center mb-4">
+                    <h3 className="text-4xl capitalize font-semibold">
                         {group.title}
                     </h3>
-                    <Link to={`/connections/${group.owner._id}`} className='ml-auto text-lg'>
-                        Owned by: <span className='capitalize'>{group.owner.name}</span>
+                    <Link to={`/connections/${group.owner._id}`} className="ml-auto text-lg text-amber-600">
+                        Owned by: <span className="capitalize">{group.owner.name}</span>
                     </Link>
                 </div>
-                <p className='text-lg font-light my-3'>
+                <p className="text-xl font-light my-3">
                     {group.description}
                 </p>
-                <div className=''>
-                    Usual meeting day: {group.date}
+                <div className="text-lg text-gray-800 mb-2">
+                    <span className="font-semibold mr-1">
+                        Usual meeting day:
+                    </span>
+                    {group.date}
                 </div>
-                <div className=''>
-                    Usual active time: {group.time}
+                <div className="text-lg text-gray-800 mb-2">
+                    <span className="font-semibold mr-1">
+                        Usual active time:
+                    </span>
+                    {group.time}
                 </div>
-                <div className=''>
-                    Usual meeting spot: {group.place}
+                <div className="text-lg text-gray-800 mb-2">
+                    <span className="font-semibold mr-1">
+                        Usual meeting spot:
+                    </span>
+                    {group.place}
                 </div>
-                <div className='my-5' onClick={() => setMembersModalIsOpen(true)}>
-                    {group.members.length} total members including {mutualFriends.length} mutuals
+                <div className="my-5">
+                    <span className="text-lg text-amber-600 font-semibold cursor-pointer underline underline-offset-2" onClick={() => setMembersModalIsOpen(true)}>
+                        {group.members.length} total members including {mutualFriends.length} mutuals
+                    </span>
                 </div>
-                <div className='flex gap-x-5 items-center'>
+                <div className="flex items-center mb-4">
                     {group.events.length === 0 ? (
-                        <h3 className='text-lg '>
+                        <h3 className="text-lg text-gray-800 font-semibold">
                             No events happening currently
                         </h3>
                     ) : (
-                        <h3>
-
-                            {group.events.length} events happening!
-
+                        <h3 className="text-lg text-gray-800 font-semibold">
+                            There are {group.events.length} on-going events
                         </h3>
-                    )
-                    }
-
+                    )}
                     {isMember && (
-                        <button className='text-amber-600 ml-auto' onClick={() => setEventsModalIsOpen(true)}>
+                        <button className="text-amber-600 ml-auto font-semibold" onClick={() => setEventsModalIsOpen(true)}>
                             Create an event
                         </button>
                     )}
-
                 </div>
                 <ul>
                     {events.map((event) => {
-                        return <Event key={event._id} event={event} />
+                        return <Event key={event._id} event={event} />;
                     })}
                 </ul>
             </div>
