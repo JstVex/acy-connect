@@ -84,7 +84,6 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setEvents(data);
-                    console.log('events are', events)
                 }
             } catch (error) {
                 console.log('Error fetching events', error)
@@ -165,9 +164,9 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                         </button>
                     )}
                 </div>
-                <ul>
+                <ul className='flex flex-col gap-y-5'>
                     {events.map((event) => {
-                        return <Event key={event._id} event={event} />;
+                        return <Event key={event._id} event={event} user={user} />;
                     })}
                 </ul>
             </div>

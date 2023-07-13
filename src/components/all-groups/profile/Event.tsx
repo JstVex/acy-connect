@@ -1,15 +1,13 @@
 import { FC } from 'react'
-import { EventModel } from '../../../types/models'
-import { useContext } from 'react';
-import { AuthContext } from '../../../context/AuthContext';
+import { EventModel, UserModel } from '../../../types/models'
+import clsx from 'clsx';
 
 interface EventProps {
     event: EventModel;
+    user: UserModel | null;
 }
 
-const Event: FC<EventProps> = ({ event }) => {
-    const { user } = useContext(AuthContext);
-
+const Event: FC<EventProps> = ({ event, user }) => {
     const participants = event.participants;
     const totalParticipants = participants.length;
 
@@ -41,6 +39,9 @@ const Event: FC<EventProps> = ({ event }) => {
         ));
     };
 
+    const isUserParticipated = event.participants.some(participant => participant._id === user?._id);
+    console.log('isUserparticipated', isUserParticipated)
+
     const handleParticipating = async () => {
         try {
             const response = await fetch(`http://localhost:4080/events/${event._id}`, {
@@ -62,7 +63,7 @@ const Event: FC<EventProps> = ({ event }) => {
     }
 
     return (
-        <li className="flex flex-col  bg-white rounded-md shadow-md my-4 p-3">
+        <li className={clsx("flex flex-col bg-white rounded-md shadow-md p-3", isUserParticipated && "order-last")}>
             <div className="flex-grow">
                 <h3 className="text-lg font-semibold">
                     {event.title}
@@ -74,7 +75,7 @@ const Event: FC<EventProps> = ({ event }) => {
                     {event.date} at {event.time}
                 </div>
                 {totalParticipants > 2 ? (
-                    <div className="relative">
+                    <div className="relative mb-3">
                         {renderParticipantImages()}
                     </div>
                 ) : (
@@ -82,14 +83,22 @@ const Event: FC<EventProps> = ({ event }) => {
                         {totalParticipants} participants
                     </div>
                 )}
-
             </div>
-            <button
-                className="text-sm bg-amber-800 text-white rounded-md px-3 py-2 ml-auto hover:bg-amber-900"
-                onClick={handleParticipating}
-            >
-                Participate
-            </button>
+            {isUserParticipated ? (
+                <div
+                    className="text-sm text-amber-700 ml-auto mt-2"
+                >
+                    Participated
+                </div>
+            ) : (
+                <button
+                    className="text-sm bg-amber-800 text-white rounded-md px-3 py-2 ml-auto hover:bg-amber-900"
+                    onClick={handleParticipating}
+                >
+                    Participate
+                </button>
+            )}
+
         </li>
     )
 }
