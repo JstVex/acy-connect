@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import MembersModal from '../components/all-groups/MembersModal'
 import CreateEventsModal from '../components/all-groups/CreateEventsModal'
 import Event from '../components/all-groups/profile/Event'
+import GroupInvitationModal from '../components/all-groups/GroupInvitationModal'
 
 interface GroupProfileProps {
     props?: string
@@ -16,10 +17,13 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
     const [membersModalIsOpen, setMembersModalIsOpen] = useState(false);
     const [eventsModalIsOpen, setEventsModalIsOpen] = useState(false);
+    const [invitationModalIsOpen, setInvitationModalIsOpen] = useState(false);
 
     const [user, setUser] = useState<UserModel | null>(null);
     const [mutualFriends, setMutualFriends] = useState<UserModel[]>([]);
     const [events, setEvents] = useState<EventModel[]>([]);
+
+    const [allMutuals, setAllMutuals] = useState<any[] | undefined>([]);
 
     const [isMember, setIsMember] = useState<boolean>(false);
 
@@ -39,6 +43,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data)
+                    setAllMutuals(user?.connections)
                 }
 
             } catch (error) {
@@ -113,6 +118,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
         <>
             <MembersModal isOpen={membersModalIsOpen} onClose={() => setMembersModalIsOpen(false)} members={group.members} currentUser={user} mutual={mutualFriends} />
             <CreateEventsModal isOpen={eventsModalIsOpen} setIsOpen={setEventsModalIsOpen} onClose={() => setEventsModalIsOpen(false)} groupId={groupId} />
+            <GroupInvitationModal isOpen={invitationModalIsOpen} setIsOpen={setInvitationModalIsOpen} onClose={() => setInvitationModalIsOpen(false)} mutuals={allMutuals} user={user} currentGroup={group} />
             <div className="w-full max-h-screen overflow-y-auto p-3">
                 <div className="flex items-center mb-4">
                     <h3 className="text-4xl capitalize font-semibold">
@@ -146,6 +152,9 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 <div className="my-5">
                     <span className="text-lg text-amber-600 font-semibold cursor-pointer underline underline-offset-2" onClick={() => setMembersModalIsOpen(true)}>
                         {group.members.length} total members including {mutualFriends.length} mutuals
+                    </span>
+                    <span className="text-l ml-2 font-semibold cursor-pointer" onClick={() => setInvitationModalIsOpen(true)}>
+                        - Invite others from friend list
                     </span>
                 </div>
                 <div className="flex items-center mb-4">
