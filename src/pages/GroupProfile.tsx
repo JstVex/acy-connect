@@ -43,7 +43,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setUser(data)
-                    setAllMutuals(user?.connections)
+                    setAllMutuals(data.connections)
                 }
 
             } catch (error) {
