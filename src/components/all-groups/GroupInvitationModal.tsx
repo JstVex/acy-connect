@@ -13,8 +13,7 @@ interface GroupInvitationModalProps {
 }
 
 const GroupInvitationModal: FC<GroupInvitationModalProps> = ({ isOpen, onClose, mutuals, user, currentGroup }) => {
-    console.log('mutuals', mutuals)
-    const filteredMutuals = mutuals?.filter((mutual) => !mutual.groups?.some((group: any) => group._id === currentGroup._id));
+    const filteredMutuals = mutuals?.filter((mutual) => mutual.user1.groups?.every((group: any) => group !== currentGroup._id));
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
