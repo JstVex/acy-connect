@@ -13,7 +13,21 @@ interface GroupInvitationModalProps {
 }
 
 const GroupInvitationModal: FC<GroupInvitationModalProps> = ({ isOpen, onClose, mutuals, user, currentGroup }) => {
-    const filteredMutuals = mutuals?.filter((mutual) => mutual.user1.groups?.every((group: any) => group !== currentGroup._id));
+    // const filteredMutuals = mutuals?.filter((mutual) => mutual.user1.groups?.every((group: any) => group !== currentGroup._id));
+    const filteredMutuals = mutuals?.filter((mutual) => {
+        const isCurrentUserUser1 = mutual.user1._id === user._id;
+        const isCurrentUserUser2 = mutual.user2._id === user._id;
+
+        if (isCurrentUserUser1) {
+            return !mutual.user2.groups.some((group: any) => group._id === currentGroup._id);
+        }
+
+        if (isCurrentUserUser2) {
+            return !mutual.user1.groups?.some((group: any) => group._id === currentGroup._id);
+        }
+
+        return false;
+    });
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
