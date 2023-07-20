@@ -32,7 +32,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
         }
     }
 
-    const acceptRequest = async () => {
+    const acceptConnectionRequest = async () => {
         try {
             const response = await fetch('http://localhost:4080/connections', {
                 method: 'POST',
@@ -49,6 +49,27 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
         } catch (error) {
             console.error('Error creating connection', error)
         }
+    }
+
+    const acceptGroupInvitation = async () => {
+        try {
+            const response = await fetch('http://localhost:4080/groups/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user: user?._id, id: notification.group })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Successfully joined the invited group', body)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+        deleteNotification();
     }
 
     const deleteNotification = async () => {
@@ -78,9 +99,18 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
             <button className='px-2 py-1 bg-blue-400 rounded-md' onClick={markAsRead}>
                 Mark as read
             </button>
-            <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptRequest}>
-                Accept
-            </button>
+            {notification.type === 'connection_request' && (
+                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptConnectionRequest}>
+                    Accept
+                </button>
+            )}
+            {notification.type === 'group_invitation' && (
+                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptGroupInvitation}>
+                    Accept
+                </button>
+            )}
+
+
             <button className='px-2 py-1 bg-red-400 rounded-md' onClick={deleteNotification}>
                 Reject
             </button>
