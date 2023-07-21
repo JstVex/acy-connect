@@ -54,7 +54,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
     const acceptGroupInvitation = async () => {
         try {
             const response = await fetch('http://localhost:4080/groups/join', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -67,7 +67,27 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
             }
 
         } catch (error) {
-            console.log(error)
+            console.log('Failed to join the invited group', error)
+        }
+        deleteNotification();
+    }
+
+    const acceptEventNoti = async () => {
+        try {
+            const response = await fetch(`http://localhost:4080/events/${notification.event}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: user?._id })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Successfully joined the notified event', body)
+            }
+        } catch (error) {
+            console.log('Failed to join the notified event', error)
         }
         deleteNotification();
     }
@@ -96,9 +116,11 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
             <div className='flex-1 text-gray-800'>
                 {notification.content}
             </div>
+
             <button className='px-2 py-1 bg-blue-400 rounded-md' onClick={markAsRead}>
                 Mark as read
             </button>
+
             {notification.type === 'connection_request' && (
                 <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptConnectionRequest}>
                     Accept
@@ -106,6 +128,11 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
             )}
             {notification.type === 'group_invitation' && (
                 <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptGroupInvitation}>
+                    Accept
+                </button>
+            )}
+            {notification.type === 'event_notifying' && (
+                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptEventNoti}>
                     Accept
                 </button>
             )}
