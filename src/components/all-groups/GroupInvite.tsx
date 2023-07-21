@@ -32,6 +32,16 @@ const GroupInvite: FC<GroupInviteProps> = ({ mutual, user, group }) => {
         }
     }
 
+    const alreadyInvitedUser1 = mutual.user1.notifications?.some((notification: any) => {
+        return notification.type === 'group_invitation' &&
+            notification.sender === user._id
+    })
+
+    const alreadyInvitedUser2 = mutual.user2.notifications?.some((notification: any) => {
+        return notification.type === 'group_invitation' &&
+            notification.sender === user._id
+    })
+
     return (
         <li className='flex my-1'>
             {mutual.user1._id === user._id ? (
@@ -58,9 +68,15 @@ const GroupInvite: FC<GroupInviteProps> = ({ mutual, user, group }) => {
                 </div>
             )}
 
-            <div className='ml-auto text-amber-600 cursor-pointer' onClick={handleInvitation}>
-                invite
-            </div>
+            {(alreadyInvitedUser1 || alreadyInvitedUser2) ? (
+                <div className='ml-auto text-amber-600 cursor-pointer' >
+                    invited
+                </div>
+            ) : (
+                <div className='ml-auto text-amber-600 cursor-pointer' onClick={handleInvitation}>
+                    invite
+                </div>
+            )}
         </li>
     )
 }
