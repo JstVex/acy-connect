@@ -27,10 +27,15 @@ const ParticipatedEvent: FC<ParticipatedEventProps> = ({ event, user }) => {
     }
 
     return (
-        <li className='flex flex-col ring-1 ring-zinc-900 rounded-md shadow-md my-5 p-3'>
-            <h3 className='text-lg flex-grow font-semibold'>
-                {event.title}
-            </h3>
+        <li className='flex flex-col bg-white rounded-md shadow-md p-3 my-3'>
+            <div className='flex items-center'>
+                <h3 className='text-lg flex-grow font-semibold text-amber-800'>
+                    {event.title}
+                </h3>
+                <div className='font-light text-gray-600'>
+                    group: {event.group.title}
+                </div>
+            </div>
             <p className='my-1 font-light'>
                 {event.description}
             </p>

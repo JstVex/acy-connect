@@ -68,14 +68,19 @@ const Events: FC<EventsProps> = () => {
         <div className='w-full max-h-screen overflow-y-auto p-3'>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} firstTitle='Participated Events' secondTitle='Other on going events' >
                 {activeTab === "Participated Events" ? (
-                    participatedEvents.map((event) => {
-                        return <ParticipatedEvent key={event._id} event={event} user={user} />
-                    })
+                    <ul>
+                        {participatedEvents.map((event) => {
+                            return <ParticipatedEvent key={event._id} event={event} user={user} />
+                        })}
+                    </ul>
+
 
                 ) : (
-                    allOtherEvents.map((event) => {
-                        return <AllOtherEvents key={event._id} event={event} user={user} />
-                    })
+                    <ul>
+                        {allOtherEvents.map((event) => {
+                            return <AllOtherEvents key={event._id} event={event} user={user} />
+                        })}
+                    </ul>
                 )}
             </Tabs>
         </div>
