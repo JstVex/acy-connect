@@ -9,16 +9,24 @@ interface ConnectionProps {
 const Connection: FC<ConnectionProps> = ({ user }) => {
     return (
         <Link to={`${user._id}`}>
-            <li className='border border-zinc-900/10 shadow-sm rounded-lg my-5 p-3'>
+            <li className='p-3 rounded-md hover:bg-amber-100/40 '>
                 <div className='flex items-center gap-x-3'>
-                    <img src={user.image} alt="" className='w-auto h-auto max-w-[48px] max-h-[48px] aspect-square rounded-full' />
+                    {user.image ? (
+                        <img src={user.image} alt="" className='w-auto h-auto max-w-[45px] max-h-[45px] aspect-square rounded-full' />
+                    ) : (
+                        <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[45px] max-h-[45px] aspect-square rounded-full' />
+                    )}
+
                     <div className='flex flex-col'>
-                        <div className='text-lg'>
+                        <div className='text-md'>
                             {user.name}
                         </div>
-                        <div className='font-light'>
+                        <div className='font-light text-sm'>
                             {user.email}
                         </div>
+                    </div>
+                    <div className='ml-auto text-amber-600 cursor-pointer'>
+                        Unfriend
                     </div>
                 </div>
             </li>

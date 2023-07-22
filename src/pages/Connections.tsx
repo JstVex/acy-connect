@@ -64,6 +64,7 @@ const Connections: FC<ConnectionsProps> = () => {
     useEffect(() => {
         if (searchValue.trim() === '') {
             setFilteredUsers([]);
+            setFilteredConnections([]);
         }
     }, [searchValue]);
 
@@ -78,9 +79,11 @@ const Connections: FC<ConnectionsProps> = () => {
                                 There is no user with the name you are searching for.
                             </p>
                         )}
-                        {(searchValue.trim() === '' ? connections : filteredConnections).map(connection => {
-                            return <Connection key={connection.connectionId} user={connection.connectedUser} />
-                        })}
+                        <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
+                            {(searchValue.trim() === '' ? connections : filteredConnections).map(connection => {
+                                return <Connection key={connection.connectionId} user={connection.connectedUser} />
+                            })}
+                        </ul>
                     </>
 
                 ) : (
@@ -90,9 +93,11 @@ const Connections: FC<ConnectionsProps> = () => {
                                 There is no user with the name you are searching for.
                             </p>
                         )}
-                        {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
-                            return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
-                        })}
+                        <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
+                            {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
+                                return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
+                            })}
+                        </ul>
                     </>
                 )}
             </Tabs>
