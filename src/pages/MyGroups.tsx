@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import SearchBar from '../components/all-groups/SearchBar'
-import { GroupModel } from '../types/models'
+import { GroupModel, UserModel } from '../types/models'
 import OwnedGroup from '../components/my-groups/OwnedGroup'
 import JoinedGroup from '../components/my-groups/JoinedGroup'
 import Tabs from '../components/Tabs'
@@ -12,6 +12,7 @@ interface MyGroupsProps {
 const MyGroups: FC<MyGroupsProps> = () => {
     const [ownedGroups, setOwnedGroups] = useState<GroupModel[]>([]);
     const [joinedGroups, setJoinedGroups] = useState<GroupModel[]>([]);
+    const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
 
     const [filteredOwnedGroups, setFilteredOwnedGroups] = useState<GroupModel[]>(ownedGroups);
     const [filteredJoinedGroups, setFilteredJoinedGroups] = useState<GroupModel[]>(joinedGroups);
@@ -31,6 +32,7 @@ const MyGroups: FC<MyGroupsProps> = () => {
                     },
                 });
                 const user = await response.json();
+                setCurrentUser(user);
 
                 const userGroups = user?.groups;
                 const owned: GroupModel[] = [];
@@ -80,7 +82,7 @@ const MyGroups: FC<MyGroupsProps> = () => {
                             </div>
                         )}
                         {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
-                            return <OwnedGroup key={ownedGroup._id} group={ownedGroup} />
+                            return <OwnedGroup key={ownedGroup._id} group={ownedGroup} currentUser={currentUser} />
                         })}
                     </>
                 ) : (
@@ -96,7 +98,7 @@ const MyGroups: FC<MyGroupsProps> = () => {
                             </div>
                         )}
                         {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
-                            return <JoinedGroup key={joinedGroup._id} group={joinedGroup} />
+                            return <JoinedGroup key={joinedGroup._id} group={joinedGroup} currentUser={currentUser} />
                         })}
                     </>
                 )}
