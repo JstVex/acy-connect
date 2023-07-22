@@ -65,9 +65,11 @@ const Notifications = () => {
                                 There is no new notification currently.
                             </div>
                         )}
-                        {newNotifications?.map((noti) => {
-                            return <Notification notification={noti} user={user} />
-                        })}
+                        <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
+                            {newNotifications?.map((noti) => {
+                                return <Notification notification={noti} user={user} />
+                            })}
+                        </ul>
                     </>
                 ) : (
                     <>
@@ -76,9 +78,11 @@ const Notifications = () => {
                                 No notifcation is marked as read.
                             </div>
                         )}
-                        {markedAsReadNotifications?.map((noti) => {
-                            return <Notification notification={noti} user={user} />
-                        })}
+                        <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
+                            {markedAsReadNotifications?.map((noti) => {
+                                return <Notification notification={noti} user={user} />
+                            })}
+                        </ul>
                     </>
                 )}
             </Tabs>

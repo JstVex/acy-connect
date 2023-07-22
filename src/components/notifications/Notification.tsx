@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import clsx from 'clsx';
 import { UserModel } from '../../types/models';
+import { Trash2 } from 'lucide-react';
 
 interface NotificationProps {
     notification: {
@@ -112,35 +113,29 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
     }
 
     return (
-        <li className={clsx('px-3 py-3 my-2 rounded-md shadow-sm flex items-center gap-x-3', notification.status === 'read' ? 'bg-gray-200/40 opacity-80 order-last' : 'bg-white')}>
+        <li className='px-3 py-4 rounded-md flex items-center gap-x-3 hover:bg-amber-100/40 hover:shadow-sm '>
+            <button className={clsx('w-3 h-3 border border-zinc-700', notification.status === 'read' && 'bg-blue-400')} onClick={markAsRead} />
             <div className='flex-1 text-gray-800'>
                 {notification.content}
             </div>
 
-            <button className='px-2 py-1 bg-blue-400 rounded-md' onClick={markAsRead}>
-                Mark as read
-            </button>
-
             {notification.type === 'connection_request' && (
-                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptConnectionRequest}>
+                <button className='text-amber-600' onClick={acceptConnectionRequest}>
                     Accept
                 </button>
             )}
             {notification.type === 'group_invitation' && (
-                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptGroupInvitation}>
+                <button className='text-amber-600' onClick={acceptGroupInvitation}>
                     Accept
                 </button>
             )}
             {notification.type === 'event_notifying' && (
-                <button className='px-2 py-1 bg-green-400 rounded-md' onClick={acceptEventNoti}>
-                    Accept
+                <button className='text-amber-600' onClick={acceptEventNoti}>
+                    Join
                 </button>
             )}
 
-
-            <button className='px-2 py-1 bg-red-400 rounded-md' onClick={deleteNotification}>
-                Reject
-            </button>
+            <Trash2 size={18} onClick={deleteNotification} className='ml-3 cursor-pointer' />
         </li>
     )
 }
