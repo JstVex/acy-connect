@@ -101,6 +101,26 @@ const GroupProfile: FC<GroupProfileProps> = () => {
         fetchEvents();
     }, [groupId, user?._id, isMember])
 
+    const handleGroupLeave = async () => {
+        try {
+            const response = await fetch('http://localhost:4080/groups/leave', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user: user?._id, id: groupId })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Successfully left the group', body)
+            }
+
+        } catch (error) {
+            console.log('Failed to leave group', error)
+        }
+    }
+
     // useEffect(() => {
     //     console.log('user connections', user?.connections)
     //     console.log('group:', group)
@@ -124,9 +144,15 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                     <h3 className="text-4xl capitalize font-semibold">
                         {group.title}
                     </h3>
-                    <Link to={`/connections/${group.owner._id}`} className="ml-auto text-lg text-amber-600">
+                    {/* <Link to={`/connections/${group.owner._id}`} className="ml-auto text-lg text-amber-600">
                         Owned by: <span className="capitalize">{group.owner.name}</span>
-                    </Link>
+                    </Link> */}
+                    {isMember && (
+                        <div className='ml-auto text-lg text-amber-600 cursor-pointer' onClick={handleGroupLeave}>
+                            Leave group
+                        </div>
+                    )}
+
                 </div>
                 <p className="text-xl font-light my-3">
                     {group.description}
