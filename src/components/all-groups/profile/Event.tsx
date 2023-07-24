@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { EventModel, UserModel } from '../../../types/models'
 import clsx from 'clsx';
+import { format, parseISO } from 'date-fns';
 
 interface EventProps {
     event: EventModel;
@@ -10,6 +11,9 @@ interface EventProps {
 const Event: FC<EventProps> = ({ event, user }) => {
     const participants = event.participants;
     const totalParticipants = participants.length;
+
+    const date = parseISO(event.date)
+    const formattedDate = format(date, 'dd.MM.yyyy');
 
     const renderParticipantImages = () => {
         const maxDisplayedParticipants = 2;
@@ -72,7 +76,7 @@ const Event: FC<EventProps> = ({ event, user }) => {
                     {event.description}
                 </p>
                 <div className="text-sm text-gray-600 mb-2">
-                    {event.date} at {event.time}
+                    {formattedDate} at {event.time}
                 </div>
                 {totalParticipants > 2 ? (
                     <div className="relative mb-3">

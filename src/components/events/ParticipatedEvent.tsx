@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { EventModel, UserModel } from '../../types/models';
+import { format, parseISO } from 'date-fns';
 
 interface ParticipatedEventProps {
     event: EventModel
@@ -7,6 +8,9 @@ interface ParticipatedEventProps {
 }
 
 const ParticipatedEvent: FC<ParticipatedEventProps> = ({ event, user }) => {
+    const date = parseISO(event.date)
+    const formattedDate = format(date, 'dd.MM.yyyy');
+
     const handleQuit = async () => {
         try {
             const response = await fetch(`http://localhost:4080/events/${event._id}`, {
@@ -40,7 +44,7 @@ const ParticipatedEvent: FC<ParticipatedEventProps> = ({ event, user }) => {
                 {event.description}
             </p>
             <div className='text-sm'>
-                {event.date} at {event.time}
+                {formattedDate} at {event.time}
             </div>
             <div className='flex gap-x-3 items-center'>
                 <div>
