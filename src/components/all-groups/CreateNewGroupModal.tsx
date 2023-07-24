@@ -1,7 +1,7 @@
-import { FC, useState } from 'react'
-import Modal from '../ui/Modal'
-import { Input } from '../ui/Input'
-import { AuthUserModel } from '../../types/models'
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import Modal from '../ui/Modal';
+import { AuthUserModel } from '../../types/models';
+import ProfileInput from '../ui/ProfileInput';
 
 interface CreateNewGroupModalProps {
     isOpen?: boolean;
@@ -11,24 +11,36 @@ interface CreateNewGroupModalProps {
 }
 
 const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, setIsOpen, onClose, user }) => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
-    const [time, setTime] = useState('');
-    const [place, setPlace] = useState('');
-    const [groupLink, setGroupLink] = useState('');
+    const [group, setGroup] = useState({
+        title: '',
+        description: '',
+        date: '',
+        time: '',
+        place: '',
+        groupLink: ''
+    });
 
-    const handleSubmit = async (e: any) => {
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        // const newValue = Array.isArray(value) ? value : [value];
+
+        setGroup((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const requestBody = {
             owner: user?._id,
-            title,
-            description,
-            date,
-            time,
-            place,
-            groupLink
+            title: group.title,
+            description: group.description,
+            date: group.date,
+            time: group.time,
+            place: group.place,
+            groupLink: group.groupLink
         };
 
         try {
@@ -57,68 +69,73 @@ const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, setIsOpen, 
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <h2 className="text-xl font-semibold leading-7 text-gray-900">
+            <h2 className="text-2xl font-semibold leading-7 text-gray-900">
                 Create a new group
             </h2>
             <p className="mt-1 text-sm leading-6 text-gray-600">
                 Can't find the group you want? Make your own one and let others join!
             </p>
-            <form className='mt-6 flex flex-col gap-y-0' onSubmit={handleSubmit}>
-                <Input
-                    label="Title"
-                    id="title"
-                    disabled={false}
-                    value={title}
-                    setValue={setTitle}
-                    required
+            <form className='mt-3 flex flex-col gap-y-0' onSubmit={handleSubmit}>
+                <ProfileInput
+                    id='title'
+                    name='title'
+                    label='Title'
+                    type='text'
+                    value={group.title}
+                    onChange={handleInputChange}
+                    placeholder='Title'
                 />
-                <Input
-                    label="Description"
-                    id="description"
-                    disabled={false}
-                    value={description}
-                    setValue={setDescription}
-                    required
+                <ProfileInput
+                    id='description'
+                    name='description'
+                    label='Description'
+                    type='text'
+                    value={group.description}
+                    onChange={handleInputChange}
+                    placeholder='Description'
                 />
                 <div className='flex items-center gap-x-4'>
-                    <Input
-                        label="Usual date"
-                        id="date"
-                        disabled={false}
-                        value={date}
-                        setValue={setDate}
-                        placeholder='E.g- Tues & Thurs'
-                        required
+                    <ProfileInput
+                        id='date'
+                        name='date'
+                        label='Usual Day'
+                        type='text'
+                        value={group.date}
+                        onChange={handleInputChange}
+                        placeholder='Eg. Friday, Saturday'
                     />
-                    <Input
-                        label="Usual time"
-                        id="time"
-                        disabled={false}
-                        value={time}
-                        setValue={setTime}
-                        placeholder='E.g- 10 to 2:30'
+                    <ProfileInput
+                        id='time'
+                        name='time'
+                        label='Usual Time'
+                        type='text'
+                        value={group.time}
+                        onChange={handleInputChange}
+                        placeholder='Eg. 1 to 4'
                     />
-                    <Input
-                        label="Usual meetup spot"
-                        id="place"
-                        disabled={false}
-                        value={place}
-                        setValue={setPlace}
-                        placeholder='E.g- cafetaria'
+                    <ProfileInput
+                        id='place'
+                        name='place'
+                        label='Usual Place'
+                        type='text'
+                        value={group.place}
+                        onChange={handleInputChange}
+                        placeholder='Eg. cafereria'
                     />
                 </div>
-                <Input
-                    label="Messenger/Telegram group link (optional)"
-                    id="grouplink"
-                    disabled={false}
-                    value={groupLink}
-                    setValue={setGroupLink}
+                <ProfileInput
+                    id='groupLink'
+                    name='groupLink'
+                    label='Messenger/Telegram group link (optional)'
+                    type='text'
+                    value={group.groupLink}
+                    onChange={handleInputChange}
+                    placeholder=''
                 />
-                <button type='submit' className='bg-amber-100 px-2 py-1.5 rounded-md mt-5 w-20'>
+                <button type='submit' className='ml-auto bg-amber-800 text-white px-2 py-1.5 rounded-md mt-5 w-20'>
                     Create
                 </button>
             </form>
-
         </Modal>
     )
 }
