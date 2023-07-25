@@ -1,11 +1,11 @@
-import { useCallback, useState, useContext } from "react";
+import { useCallback, useState, useContext, FormEvent } from "react";
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 type Variant = "login" | "register";
 
 const Signin = () => {
-    const [variant, setVariant] = useState<Variant>("register");
+    const [variant, setVariant] = useState<Variant>("login");
     const [loading, setLoading] = useState<boolean>(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const Signin = () => {
         }
     }, [variant]);
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
 
@@ -55,7 +55,6 @@ const Signin = () => {
             } catch (error) {
                 console.log(error);
             }
-
         }
 
         if (variant === 'login') {
@@ -85,72 +84,69 @@ const Signin = () => {
             } catch (error) {
                 console.log(error)
             }
-
         }
     }
 
     return (
-        <div className='flex items-center justify-center w-screen h-screen'>
-            <div className='bg-amber-100 px-10 py-8 shadow rounded-lg w-[25rem]'>
-                <h3 className='text-3xl text-center mb-8'>
-                    {variant === 'register' ? 'Register' : 'Login'}
-                </h3>
-                <form className='flex flex-col gap-y-3' onSubmit={handleSubmit}>
-                    {variant === 'register' && (
+        <div className='flex w-screen h-screen'>
+            <img src="https://onedrive.live.com/embed?resid=3616EC68410FC656%21733&authkey=%21AJiJEKx1KNdcCZQ&width=1280&height=964" alt="" className="w-auto h-auto max-w-[60vw] max-h-[100vh] object-cover hidden md:block" />
+            <div className='bg-amber-100 shadow rounded-lg w-screen md:w-[40vw]'>
+                <div className="flex flex-col h-screen items-center justify-center">
+                    <h3 className='text-2xl text-center mb-16 text-gray-900'>
+                        Welcome to ACY Connect
+                    </h3>
+                    <form className='flex flex-col gap-y-3' onSubmit={handleSubmit}>
+                        {variant === 'register' && (
+                            <div>
+                                <label htmlFor="name" className=''>
+                                    User name
+                                </label>
+                                <input
+                                    type="text"
+                                    id='name'
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className='bg-amber-100 border-b border-zinc-900/50 mt-1 mb-2 w-full placeholder:text-zinc-600 focus:outline-none focus:border-amber-800'
+                                />
+                            </div>
+                        )}
                         <div>
-                            <label htmlFor="name" className='sr-only'>
-                                Name
+                            <label htmlFor="email" className=''>
+                                Email
                             </label>
                             <input
                                 type="text"
-                                id='name'
-                                placeholder='Enter your name'
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                className='border border-zinc-600 rounded-lg w-full py-2 px-3 placeholder:text-zinc-600 focus:outline-none'
+                                id='email'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className='bg-amber-100 border-b border-zinc-900/50 mt-1 mb-2 w-full placeholder:text-zinc-600 focus:outline-none focus:border-amber-800'
                             />
                         </div>
-                    )}
-                    <div>
-                        <label htmlFor="email" className='sr-only'>
-                            Email
-                        </label>
-                        <input
-                            type="text"
-                            id='email'
-                            placeholder='Enter your email'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className='border border-zinc-900/50 rounded-lg w-full py-2 px-3 placeholder:text-zinc-600 focus:outline-none focus:border-amber-800'
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password" className='sr-only'>
-                            Password
-                        </label>
-                        <input
-                            type="text"
-                            id='password'
-                            placeholder='Enter your password'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className='border border-zinc-900 rounded-lg w-full py-2 px-3 placeholder:text-zinc-600 focus:outline-none'
-                        />
-                    </div>
-                    <button type="submit" className='bg-amber-400 rounded-md px-3 py-2 w-28 mt-4 mx-auto'>
-                        Submit
-                    </button>
-                </form>
-
-                <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-zinc-700">
-                    <div>
-                        {variant === 'login' ? 'New to acy connect?' : 'Already have an account?'}
-                    </div>
-                    <div className="underline cursor-pointer" onClick={toggleVariant}>
-                        {variant === 'login' ? 'Create an account' : 'Login'}
+                        <div>
+                            <label htmlFor="email" className='text-gray-700'>
+                                Password
+                            </label>
+                            <input
+                                type="text"
+                                id='password'
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className='bg-amber-100 border-b border-zinc-900/50 mt-1 mb-2 w-full placeholder:text-zinc-600 focus:outline-none focus:border-amber-800'
+                            />
+                        </div>
+                        <button type="submit" className='bg-amber-800 text-white rounded-3xl px-3 py-2 w-40 mt-4 mx-auto'>
+                            {variant === 'register' ? 'Register' : 'Login'}
+                        </button>
+                    </form>
+                    <div className="mt-16 flex gap-2 justify-center text-sm px-2 text-zinc-700">
+                        <div>
+                            {variant === 'login' ? 'New to acy connect?' : 'Already have an account?'}
+                        </div>
+                        <div className="underline cursor-pointer" onClick={toggleVariant}>
+                            {variant === 'login' ? 'Create an account' : 'Login'}
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     )
