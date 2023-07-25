@@ -8,12 +8,13 @@ interface ProfileInputProps {
     label: string;
     type: string;
     onChange: any;
-    placeholder: string
+    placeholder: string;
+    className?: string;
 }
 
-const ProfileInput: FC<ProfileInputProps> = ({ id, name, label, type, value, onChange, placeholder }) => {
+const ProfileInput: FC<ProfileInputProps> = ({ id, name, label, type, value, onChange, placeholder, className }) => {
     return (
-        <div className="my-1">
+        <div className={clsx("my-1", className)}>
             <label htmlFor={id} className="block text-sm font-medium leading-6 text-zinc-900">
                 {label}
             </label>
