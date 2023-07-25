@@ -1,15 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import SearchBar from '../components/all-groups/SearchBar'
 import { GroupModel, UserModel } from '../types/models'
-import OwnedGroup from '../components/my-groups/OwnedGroup'
-import JoinedGroup from '../components/my-groups/JoinedGroup'
 import Tabs from '../components/Tabs'
+import Group from '../components/Group'
 
-interface MyGroupsProps {
-    props?: string
-}
-
-const MyGroups: FC<MyGroupsProps> = () => {
+const MyGroups = () => {
     const [ownedGroups, setOwnedGroups] = useState<GroupModel[]>([]);
     const [joinedGroups, setJoinedGroups] = useState<GroupModel[]>([]);
     const [currentUser, setCurrentUser] = useState<UserModel | null>(null);
@@ -39,7 +34,7 @@ const MyGroups: FC<MyGroupsProps> = () => {
                 const joined: GroupModel[] = [];
 
                 userGroups?.forEach((group: GroupModel) => {
-                    if (group.owner === user?._id) {
+                    if (group.owner._id === user?._id) {
                         owned.push(group);
                     } else {
                         joined.push(group);
@@ -81,9 +76,11 @@ const MyGroups: FC<MyGroupsProps> = () => {
                                 You haven't created any group yet.
                             </div>
                         )}
-                        {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
-                            return <OwnedGroup key={ownedGroup._id} group={ownedGroup} currentUser={currentUser} />
-                        })}
+                        <ul className='mt-5 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-5'>
+                            {(searchValue.trim() === '' ? ownedGroups : filteredOwnedGroups).map(ownedGroup => {
+                                return <Group key={ownedGroup._id} group={ownedGroup} currentUser={currentUser} />
+                            })}
+                        </ul>
                     </>
                 ) : (
                     <>
@@ -97,9 +94,11 @@ const MyGroups: FC<MyGroupsProps> = () => {
                                 You haven't joined any group yet.
                             </div>
                         )}
-                        {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
-                            return <JoinedGroup key={joinedGroup._id} group={joinedGroup} currentUser={currentUser} />
-                        })}
+                        <ul className='mt-5 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-5'>
+                            {(searchValue.trim() === '' ? joinedGroups : filteredJoinedGroups).map(joinedGroup => {
+                                return <Group key={joinedGroup._id} group={joinedGroup} currentUser={currentUser} />
+                            })}
+                        </ul>
                     </>
                 )}
             </Tabs>
