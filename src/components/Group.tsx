@@ -11,25 +11,64 @@ interface GroupProps {
 const Group: FC<GroupProps> = ({ group, currentUser }) => {
     const [mutualFriends, setMutualFriends] = useState<UserModel[]>([]);
 
-    const joinGroup = async () => {
-        try {
-            const response = await fetch('http://localhost:4080/groups/join', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user: currentUser?._id, id: group._id })
-            })
+    const members = group.members;
+    const totalMembers = members.length;
+    const totalMutuals = mutualFriends.length;
+    console.log('members are', group.members)
 
-            if (response.ok) {
-                const body = await response.json();
-                console.log('Updated group:', body)
-            }
+    const renderMemberImages = () => {
+        const maxDisplayedMembers = 4;
+        const displayedMembers = members.slice(0, maxDisplayedMembers);
+        const displayMutuals = mutualFriends.slice(0, maxDisplayedMembers)
 
-        } catch (error) {
-            console.log(error)
-        }
-    }
+        return (totalMutuals >= 4 ? displayMutuals : displayedMembers).map((member, index) => (
+            <div>
+                {member.image ? (
+                    <img
+                        key={member._id}
+                        src={member.image}
+                        alt={member.name}
+                        className={`w-8 h-8 rounded-full object-cover aspect-square absolute -left-${index * 3} z-${maxDisplayedMembers - index}`}
+                        style={{ marginLeft: `${index * 1.5}rem` }}
+                    />
+                ) : (
+                    <img
+                        key={member._id}
+                        src='/src/assets/placeholder.jpeg'
+                        alt={member.name}
+                        className={`w-8 h-8 rounded-full object-cover aspect-square absolute -left-${index * 3} z-${maxDisplayedMembers - index}`}
+                        style={{ marginLeft: `${index * 1.5}rem` }}
+                    />
+                )}
+
+                {totalMembers > 5 &&
+                    <div className={`w-8 h-8 rounded-full absolute -left-${5} flex items-center justify-center text-amber-800`} style={{ marginLeft: `${6.5}rem` }}>
+                        +{totalMembers - 4}
+                    </div>
+                }
+            </div >
+        ));
+    };
+
+    // const joinGroup = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:4080/groups/join', {
+    //             method: 'PATCH',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ user: currentUser?._id, id: group._id })
+    //         })
+
+    //         if (response.ok) {
+    //             const body = await response.json();
+    //             console.log('Updated group:', body)
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     useEffect(() => {
         const fetchMutualFriends = async () => {
@@ -49,68 +88,35 @@ const Group: FC<GroupProps> = ({ group, currentUser }) => {
         fetchMutualFriends();
     }, [currentUser?._id, group._id])
 
+
     return (
-        <li className="flex flex-col bg-white rounded-md shadow-md p-3">
-            <div className="flex items-center mb-0.5">
+        <li className="flex flex-col bg-white rounded-3xl shadow-sm py-3 px-5 ring-1 ring-gray-200">
+            <div className="flex flex-col mb-0.5 pb-3 border-b border-gray-200">
                 <h3 className="text-2xl flex-grow font-semibold text-amber-800">
                     {group.title}
                 </h3>
-                <div className="font-light text-gray-500">
+                <div className="font-light text-gray-500 text-sm sm:text-md">
                     Created by {group.owner.name}
                 </div>
             </div>
-            <p className="text-lg my-1 text-gray-800">
+            <p className="text-md my-1 text-gray-600">
                 {group.description}
             </p>
-            {mutualFriends.length === 0 ? (
-                <div className="text-sm text-gray-600">
-                    {group.members.length} members
-                </div>
-            ) : (
-                <div className="text-sm text-gray-600">
-                    {group.members.length} members including {mutualFriends.length} mutual <span>
-                        {mutualFriends.length === 1 ? "connection" : "connections"}
-                    </span>
-                </div>
-            )}
-            <div className="text-sm text-gray-600">
+            <div className="text-xs sm:text-sm text-gray-500 flex items-center">
                 Usually active from {group.time} on {group.date} at {group.place}
             </div>
-            <div className="flex items-center mt-2 gap-x-2">
-                {group.events.length === 0 ? (
-                    <div className="text-gray-800">
-                        This group does not have any ongoing event yet
-                    </div>
-                ) : (
-                    <div className="text-gray-800">
-                        {group.events.length} ongoing events -
-                    </div>
-                )}
-                <ul className="flex gap-x-1 text-amber-800">
-                    {group.events.map((event, index) => {
-                        const isLastItem = index === group.events.length - 1;
-                        const comma = isLastItem ? "" : ",";
-                        return (
-                            <li key={event._id}>
-                                {event.title}
-                                {comma}
-                            </li>
-                        );
-                    })}
-                </ul>
+            <div className="relative mt-5 mb-8">
+                {renderMemberImages()}
             </div>
-            <div className="mt-2 flex justify-end">
+            <div className="mt-auto flex justify-end gap-x-2">
                 <Link
                     to={`/groups/${group._id}`}
-                    className="bg-amber-800 text-white rounded-md px-3 py-2 text-sm"
+                    className="bg-amber-800 text-white rounded-3xl px-3 py-2 text-xs sm:text-sm"
                 >
                     View Group
                 </Link>
-                <button className="bg-amber-800 text-white rounded-md px-3 py-2 ml-3 text-sm" onClick={joinGroup}>
-                    Join group
-                </button>
             </div>
-        </li>
+        </li >
     )
 }
 
