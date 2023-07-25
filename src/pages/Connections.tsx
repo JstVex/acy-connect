@@ -79,6 +79,13 @@ const Connections: FC<ConnectionsProps> = () => {
                                 There is no user with the name you are searching for.
                             </p>
                         )}
+                        {
+                            connections.length === 0 && searchValue.trim() === '' && (
+                                <div className='mt-3 my-10 font-light'>
+                                    You don't have any connection.
+                                </div>
+                            )
+                        }
                         <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
                             {(searchValue.trim() === '' ? connections : filteredConnections).map(connection => {
                                 return <Connection key={connection.connectionId} user={connection.connectedUser} />
@@ -93,6 +100,13 @@ const Connections: FC<ConnectionsProps> = () => {
                                 There is no user with the name you are searching for.
                             </p>
                         )}
+                        {
+                            users.length === 0 && searchValue.trim() === '' && (
+                                <div className='mt-3 my-10 font-light'>
+                                    You have connected with all available users.
+                                </div>
+                            )
+                        }
                         <ul className='flex flex-col divide-y divide-amber-300 mt-3'>
                             {(searchValue.trim() === '' ? users : filteredUsers).map(connectingUser => {
                                 return <Suggestion key={connectingUser._id} user={connectingUser} currentUser={user} />
