@@ -36,7 +36,7 @@ const CreateEventsModal: FC<CreateEventsModalProps> = ({ isOpen, setIsOpen, onCl
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:4080/events', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ const CreateEventsModal: FC<CreateEventsModalProps> = ({ isOpen, setIsOpen, onCl
             <p className="mt-1 text-sm leading-6 text-gray-600">
                 Create an event for a specific date
             </p>
-            <form className='mt-5' onSubmit={handleSubmit}>
+            <form className='mt-3 flex flex-col gap-y-0' onSubmit={handleSubmit}>
                 <ProfileInput
                     id='title'
                     name='title'
@@ -81,25 +81,27 @@ const CreateEventsModal: FC<CreateEventsModalProps> = ({ isOpen, setIsOpen, onCl
                     onChange={handleInputChange}
                     placeholder='Description'
                 />
-                <ProfileInput
-                    id='date'
-                    name='date'
-                    label='Date'
-                    type='date'
-                    value={event.date}
-                    onChange={handleInputChange}
-                    placeholder='Date'
-                />
-                <ProfileInput
-                    id='time'
-                    name='time'
-                    label='Time'
-                    type='text'
-                    value={event.time}
-                    onChange={handleInputChange}
-                    placeholder='Time'
-                />
-                <button type='submit' className='bg-amber-100 px-2 py-1.5 rounded-md mt-5 w-20'>
+                <div className='grid grid-cols-2 gap-x-6'>
+                    <ProfileInput
+                        id='date'
+                        name='date'
+                        label='Date'
+                        type='date'
+                        value={event.date}
+                        onChange={handleInputChange}
+                        placeholder='Date'
+                    />
+                    <ProfileInput
+                        id='time'
+                        name='time'
+                        label='Time'
+                        type='text'
+                        value={event.time}
+                        onChange={handleInputChange}
+                        placeholder='Eg. 1 to 4'
+                    />
+                </div>
+                <button type='submit' className='ml-auto bg-amber-800 text-white px-2 py-1.5 rounded-md mt-5 w-20'>
                     Create
                 </button>
             </form>

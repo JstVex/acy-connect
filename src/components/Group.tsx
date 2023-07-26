@@ -52,7 +52,7 @@ const Group: FC<GroupProps> = ({ group, currentUser }) => {
 
     // const joinGroup = async () => {
     //     try {
-    //         const response = await fetch('http://localhost:4080/groups/join', {
+    //         const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/join', {
     //             method: 'PATCH',
     //             headers: {
     //                 'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ const Group: FC<GroupProps> = ({ group, currentUser }) => {
     useEffect(() => {
         const fetchMutualFriends = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/users/mutualfriends/${currentUser?._id}/${group._id}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/mutualfriends/${currentUser?._id}/${group._id}`);
 
                 if (response.ok) {
                     const data = await response.json();

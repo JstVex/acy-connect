@@ -60,7 +60,7 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
                 formData.append('image', profile.image);
             }
 
-            const response = await fetch('http://localhost:4080/users/me', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/me`, {
                 method: 'PATCH',
                 body: formData
             });
@@ -85,94 +85,96 @@ const SettingsModal: FC<SettingsModalProps> = ({ isOpen, setIsOpen, onClose, use
                 Customize your public information for others to see you
             </p>
             <form className='mt-4 flex flex-col gap-y-0' onSubmit={handleSubmit} encType="multipart/form-data">
-                <div className='flex flex-col sm:flex-row sm:items-center gap-x-6'>
-                    <ProfileInput
-                        id='name'
-                        name='name'
-                        label='Name'
-                        type='text'
-                        value={profile.name}
-                        onChange={handleInputChange}
-                        placeholder='Name'
-                        className='order-last sm:order-first'
-                    />
-                    <div className='flex items-center gap-x-5'>
-                        <div className='my-1 order-last sm:order-first'>
-                            <label htmlFor="image" className="block text-sm font-medium leading-6 text-zinc-900">
-                                Profile Picture
-                            </label>
-                            <div className="relative mt-1">
-                                <input
-                                    id="image"
-                                    name="image"
-                                    type="file"
-                                    onChange={handleImageChange}
-                                    className="opacity-0 absolute top-0 right-0 cursor-pointer w-full h-full"
-                                />
-                                <label htmlFor="image" className="block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6">
-                                    Choose Image
+                <div className='max-h-[300px] sm:max-h-[100%] overflow-y-auto'>
+                    <div className='flex flex-col sm:flex-row sm:items-center gap-x-6'>
+                        <ProfileInput
+                            id='name'
+                            name='name'
+                            label='Name'
+                            type='text'
+                            value={profile.name}
+                            onChange={handleInputChange}
+                            placeholder='Name'
+                            className='order-last sm:order-first'
+                        />
+                        <div className='flex items-center gap-x-5'>
+                            <div className='my-1 order-last sm:order-first'>
+                                <label htmlFor="image" className="block text-sm font-medium leading-6 text-zinc-900">
+                                    Profile Picture
                                 </label>
+                                <div className="relative mt-1">
+                                    <input
+                                        id="image"
+                                        name="image"
+                                        type="file"
+                                        onChange={handleImageChange}
+                                        className="opacity-0 absolute top-0 right-0 cursor-pointer w-full h-full"
+                                    />
+                                    <label htmlFor="image" className="block w-full rounded-md border-0 py-1.5 px-2 text-zinc-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-inset focus:ring-amber-500 sm:text-sm sm:leading-6">
+                                        Choose Image
+                                    </label>
+                                </div>
                             </div>
-                        </div>
 
-                        {selectedImage ? (
-                            <img
-                                src={URL.createObjectURL(selectedImage)}
-                                alt=""
-                                className="w-auto h-auto max-w-[70px] max-h-[70px] aspect-square object-cover rounded-full"
-                            />
-                        ) : user?.image ? (
-                            <img
-                                src={user.image}
-                                alt=""
-                                className="w-auto h-auto max-w-[75px] max-h-[75px] aspect-square object-cover rounded-full"
-                            />
-                        ) : (
-                            <img
-                                src="/src/assets/placeholder.jpeg"
-                                alt=""
-                                className="w-auto h-auto max-w-[75px] max-h-[75px] aspect-square object-cover rounded-full"
-                            />
-                        )}
+                            {selectedImage ? (
+                                <img
+                                    src={URL.createObjectURL(selectedImage)}
+                                    alt=""
+                                    className="w-auto h-auto max-w-[70px] max-h-[70px] aspect-square object-cover rounded-full"
+                                />
+                            ) : user?.image ? (
+                                <img
+                                    src={user.image}
+                                    alt=""
+                                    className="w-auto h-auto max-w-[75px] max-h-[75px] aspect-square object-cover rounded-full"
+                                />
+                            ) : (
+                                <img
+                                    src="/src/assets/placeholder.jpeg"
+                                    alt=""
+                                    className="w-auto h-auto max-w-[75px] max-h-[75px] aspect-square object-cover rounded-full"
+                                />
+                            )}
+                        </div>
                     </div>
+                    <ProfileInput
+                        id='bio'
+                        name='bio'
+                        label='Bio'
+                        type='text'
+                        value={profile.bio}
+                        onChange={handleInputChange}
+                        placeholder='Bio'
+                    />
+                    <ProfileInput
+                        id='hobbies'
+                        name='hobbies'
+                        label='Hobbies'
+                        type='text'
+                        value={profile.hobbies}
+                        onChange={handleInputChange}
+                        placeholder='Eg. Drawing, Reading'
+                    />
+                    <ProfileInput
+                        id='activeDay'
+                        name='activeDay'
+                        label='Active Day at ACY'
+                        type='text'
+                        value={profile.activeDay}
+                        onChange={handleInputChange}
+                        placeholder='Eg. Wednesday, Friday'
+                    />
+                    <ProfileInput
+                        id='fblink'
+                        name='fblink'
+                        label='Facebook Link'
+                        type='text'
+                        value={profile.fblink}
+                        onChange={handleInputChange}
+                        placeholder='Facebook link'
+                    />
 
                 </div>
-                <ProfileInput
-                    id='bio'
-                    name='bio'
-                    label='Bio'
-                    type='text'
-                    value={profile.bio}
-                    onChange={handleInputChange}
-                    placeholder='Bio'
-                />
-                <ProfileInput
-                    id='hobbies'
-                    name='hobbies'
-                    label='Hobbies'
-                    type='text'
-                    value={profile.hobbies}
-                    onChange={handleInputChange}
-                    placeholder='Eg. Drawing, Reading'
-                />
-                <ProfileInput
-                    id='activeDay'
-                    name='activeDay'
-                    label='Active Day at ACY'
-                    type='text'
-                    value={profile.activeDay}
-                    onChange={handleInputChange}
-                    placeholder='Eg. Wednesday, Friday'
-                />
-                <ProfileInput
-                    id='fblink'
-                    name='fblink'
-                    label='Facebook Link'
-                    type='text'
-                    value={profile.fblink}
-                    onChange={handleInputChange}
-                    placeholder='Facebook link'
-                />
                 <button type='submit' className='ml-auto bg-amber-800 text-white px-2 py-1.5 rounded-md mt-5 w-20'>
                     Confirm
                 </button>

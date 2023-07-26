@@ -34,7 +34,7 @@ const Signin = () => {
             };
 
             try {
-                const response = await fetch('http://localhost:4080/users', {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ const Signin = () => {
             };
 
             try {
-                const response = await fetch('http://localhost:4080/users/login', {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

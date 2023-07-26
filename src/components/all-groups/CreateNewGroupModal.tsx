@@ -44,7 +44,7 @@ const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, setIsOpen, 
         };
 
         try {
-            const response = await fetch('http://localhost:4080/groups', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ const CreateNewGroupModal: FC<CreateNewGroupModalProps> = ({ isOpen, setIsOpen, 
             <h2 className="text-2xl font-semibold leading-7 text-gray-900">
                 Create a new group
             </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
+            <p className="mt-1 text-sm leading-5 text-gray-600">
                 Can't find the group you want? Make your own one and let others join!
             </p>
             <form className='mt-3 flex flex-col gap-y-0' onSubmit={handleSubmit}>

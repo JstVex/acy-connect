@@ -11,7 +11,7 @@ const Suggestion: FC<SuggestionProps> = ({ user, currentUser }) => {
 
     const sendRequest = async () => {
         try {
-            const response = await fetch('http://localhost:4080/users/friendrequest', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/friendrequest`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,7 +30,7 @@ const Suggestion: FC<SuggestionProps> = ({ user, currentUser }) => {
 
     // const handleConnect = async () => {
     //     try {
-    //         const response = await fetch('http://localhost:4080/connections', {
+    //         const response = await fetch(`${ import.meta.env.VITE_BASE_URL } / connections', {
     //             method: 'POST',
     //             headers: {
     //                 'Content-Type': 'application/json'

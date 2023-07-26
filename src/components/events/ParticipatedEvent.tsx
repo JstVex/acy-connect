@@ -13,7 +13,7 @@ const ParticipatedEvent: FC<ParticipatedEventProps> = ({ event, user }) => {
 
     const handleQuit = async () => {
         try {
-            const response = await fetch(`http://localhost:4080/events/${event._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events/${event._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'

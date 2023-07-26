@@ -22,13 +22,24 @@ const Event: FC<EventProps> = ({ event, user }) => {
 
         return displayedParticipants.map((participant, index) => (
             <div>
-                <img
-                    key={participant._id}
-                    src={participant.image}
-                    alt={participant.name}
-                    className={`w-8 h-8 rounded-full object-cover aspect-square absolute -left-${index * 3} z-${maxDisplayedParticipants - index}`}
-                    style={{ marginLeft: `${index * 1.5}rem` }}
-                />
+                {participant.image ? (
+                    <img
+                        key={participant._id}
+                        src={participant.image}
+                        alt={participant.name}
+                        className={`w-8 h-8 rounded-full object-cover aspect-square absolute -left-${index * 3} z-${maxDisplayedParticipants - index}`}
+                        style={{ marginLeft: `${index * 1.5}rem` }}
+                    />
+                ) : (
+                    <img
+                        key={participant._id}
+                        src='/src/assets/placeholder.jpeg'
+                        alt={participant.name}
+                        className={`w-8 h-8 rounded-full object-cover aspect-square absolute -left-${index * 3} z-${maxDisplayedParticipants - index}`}
+                        style={{ marginLeft: `${index * 1.5}rem` }}
+                    />
+                )}
+
                 {index === 1 && totalParticipants > 2 &&
                     <div className={`w-8 h-8 rounded-full absolute -left-${12} flex items-center justify-center bg-gray-200`} style={{ marginLeft: `${3}rem` }}>
                         +{totalParticipants - 2}
@@ -48,7 +59,7 @@ const Event: FC<EventProps> = ({ event, user }) => {
 
     const handleParticipating = async () => {
         try {
-            const response = await fetch(`http://localhost:4080/events/${event._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events/${event._id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'

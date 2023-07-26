@@ -6,6 +6,7 @@ import MembersModal from '../components/all-groups/MembersModal'
 import CreateEventsModal from '../components/all-groups/CreateEventsModal'
 import Event from '../components/all-groups/profile/Event'
 import GroupInvitationModal from '../components/all-groups/GroupInvitationModal'
+import { parseISO, addDays, isToday, isTomorrow } from 'date-fns';
 
 interface GroupProfileProps {
     props?: string
@@ -27,11 +28,20 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
     const [isMember, setIsMember] = useState<boolean>(false);
 
+    const today = new Date();
+    const tomorrow = addDays(today, 1);
+
+    const tomorrowEvents = events.filter((event) => isTomorrow(parseISO(event.date)));
+    const ongoingEvents = events.filter((event) => isToday(parseISO(event.date)));
+
+    console.log('tomorrow events', tomorrowEvents);
+    console.log('today events', ongoingEvents)
+
     useEffect(() => {
         const fetchCurrentUser = async () => {
             try {
                 const token = localStorage.getItem('token')
-                const response = await fetch('http://localhost:4080/users/me', {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -53,7 +63,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
         const fetchGroup = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/groups/${groupId}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/${groupId}`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -70,7 +80,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
         const fetchMutualFriends = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/users/mutualfriends/${user?._id}/${groupId}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/mutualfriends/${user?._id}/${groupId}`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -84,7 +94,7 @@ const GroupProfile: FC<GroupProfileProps> = () => {
 
         const fetchEvents = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/events/${groupId}`)
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/ events/${groupId}`)
 
                 if (response.ok) {
                     const data = await response.json();
@@ -101,9 +111,29 @@ const GroupProfile: FC<GroupProfileProps> = () => {
         fetchEvents();
     }, [groupId, user?._id, isMember])
 
+    const handleJoinGroup = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/join`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user: user?._id, id: groupId })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Updated group:', body)
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleGroupLeave = async () => {
         try {
-            const response = await fetch('http://localhost:4080/groups/leave', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/leave`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -144,13 +174,18 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                     <h3 className="text-4xl capitalize font-semibold">
                         {group.title}
                     </h3>
-                    {/* <Link to={`/connections/${group.owner._id}`} className="ml-auto text-lg text-amber-600">
+
+                    {/* <Link to={`/ connections / ${ group.owner._id }`} className="ml-auto text-lg text-amber-600">
                         Owned by: <span className="capitalize">{group.owner.name}</span>
                     </Link> */}
-                    {isMember && (
-                        <div className='ml-auto text-lg text-amber-600 cursor-pointer' onClick={handleGroupLeave}>
+                    {isMember ? (
+                        <div className='ml-auto bg-amber-800 text-white rounded-3xl px-3 py-2 text-xs sm:text-sm' onClick={handleGroupLeave}>
                             Leave group
                         </div>
+                    ) : (
+                        <button className="ml-auto bg-amber-800 text-white rounded-3xl px-3 py-2 text-xs sm:text-sm" onClick={handleJoinGroup}>
+                            Join group
+                        </button>
                     )}
 
                 </div>

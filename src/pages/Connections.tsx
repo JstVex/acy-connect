@@ -31,7 +31,7 @@ const Connections: FC<ConnectionsProps> = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/users/notconnect?userId=${userId}`)
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/notconnect?userId=${userId}`)
 
                 if (response.ok) {
                     const data = await response.json();
@@ -45,7 +45,7 @@ const Connections: FC<ConnectionsProps> = () => {
 
         const fetchConnections = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/connections/foruser/${userId}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/connections/foruser/${userId}`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -71,7 +71,7 @@ const Connections: FC<ConnectionsProps> = () => {
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
             <SearchBar setFiltered={setFilteredUsers} filterField={users} setFiltered2={setFilteredConnections} filterField2={connections} setSearchValue={setSearchValue} filterBy={'name'} placeholder={'Search connections'} />
-            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} firstTitle='Your connections' secondTitle='Other users'>
+            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} firstTitle='Your connections' secondTitle='Add users'>
                 {activeTab === 'Your connections' ? (
                     <>
                         {searchValue.trim() !== '' && filteredConnections.length === 0 && (

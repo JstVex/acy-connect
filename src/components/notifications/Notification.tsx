@@ -20,7 +20,7 @@ interface NotificationProps {
 
 const Notification: FC<NotificationProps> = ({ notification, user }) => {
     const markAsRead = async () => {
-        const response = await fetch(`http://localhost:4080/users/notifications/markasread/${notification._id}`, {
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/notifications/markasread/${notification._id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -35,7 +35,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
 
     const acceptConnectionRequest = async () => {
         try {
-            const response = await fetch('http://localhost:4080/connections', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/connections`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
 
     const acceptGroupInvitation = async () => {
         try {
-            const response = await fetch('http://localhost:4080/groups/join', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/join`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -75,7 +75,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
 
     const acceptEventNoti = async () => {
         try {
-            const response = await fetch(`http://localhost:4080/events/${notification.event}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events/${notification.event}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ const Notification: FC<NotificationProps> = ({ notification, user }) => {
 
     const deleteNotification = async () => {
         try {
-            const response = await fetch(`http://localhost:4080/users/notifications/${notification._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/notifications/${notification._id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'

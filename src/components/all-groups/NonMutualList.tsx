@@ -10,7 +10,7 @@ interface NonMutualListProps {
 const NonMutualList: FC<NonMutualListProps> = ({ member, currentUser }) => {
     const sendRequest = async () => {
         try {
-            const response = await fetch('http://localhost:4080/users/friendrequest', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/friendrequest`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -34,12 +34,12 @@ const NonMutualList: FC<NonMutualListProps> = ({ member, currentUser }) => {
     })
 
     return (
-        <li className='flex'>
+        <li className='flex my-1'>
             <Link to={`/connections/${member._id}`} className='flex items-center gap-x-2'>
                 {member.image ? (
-                    <img src={member.image} alt="" className='w-auto h-auto max-w-[30px] max-h-[30px] aspect-square rounded-full' />
+                    <img src={member.image} alt="" className='w-auto h-auto max-w-[35px] max-h-[35px] aspect-square rounded-full' />
                 ) : (
-                    <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[30px] max-h-[30px] aspect-square rounded-full' />
+                    <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[35px] max-h-[35px] aspect-square rounded-full' />
                 )}
 
                 <div>

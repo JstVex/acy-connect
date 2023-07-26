@@ -6,6 +6,7 @@ import Tabs from '../components/Tabs';
 import SearchBar from '../components/all-groups/SearchBar';
 import { addDays, isAfter, isBefore, isToday, isTomorrow, parseISO } from 'date-fns';
 import DateFilter from '../components/DateFilter';
+import MajorEvents from '../components/events/MajorEvents';
 
 enum EventFilter {
     ALL = 'All',
@@ -66,7 +67,7 @@ const Events = () => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem('token')
-                const response = await fetch('http://localhost:4080/users/me', {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ const Events = () => {
 
         const fetchEventsFromAllGroups = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/events/user/${user?._id}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events/user/${user?._id}`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -113,6 +114,7 @@ const Events = () => {
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
+            {/* <MajorEvents /> */}
             <div className='flex gap-x-2 sm:gap-x-5 items-center'>
                 <SearchBar setFiltered={setTotalFilterForParticipatedEvents} filterField={filteredParticipatedEvents} setFiltered2={setTotalFilterForAllOtherEvents} filterField2={filteredAllOtherEvents} setSearchValue={setSearchValue} filterBy={'event title'} placeholder={'Search Events'} />
                 <DateFilter selectedDateFilter={selectedDateFilter} handleDateFilterChange={handleDateFilterChange} />
@@ -142,7 +144,7 @@ const Events = () => {
                             </p>
                         )}
                         {
-                            participatedEvents.length === 0 && searchValue.trim() === '' && (
+                            participatedEvents.length === 0 && searchValue.trim() === '' && selectedDateFilter === 'All' && (
                                 <div className='mt-3 my-10 font-light'>
                                     You haven't participated in any events yet.
                                 </div>
@@ -178,7 +180,7 @@ const Events = () => {
                             </p>
                         )}
                         {
-                            allOtherEvents.length === 0 && searchValue.trim() === '' && (
+                            allOtherEvents.length === 0 && searchValue.trim() === '' && selectedDateFilter === 'All' && (
                                 <div className='mt-3 my-10 font-light'>
                                     There is no other events yet in groups you have joined.
                                 </div>

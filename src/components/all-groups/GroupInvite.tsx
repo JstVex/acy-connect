@@ -20,7 +20,7 @@ const GroupInvite: FC<GroupInviteProps> = ({ mutual, user, group }) => {
 
     const handleInvitation = async () => {
         try {
-            const response = fetch('http://localhost:4080/users/groupinvitation', {
+            const response = fetch(`${import.meta.env.VITE_BASE_URL}/users/groupinvitation`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'

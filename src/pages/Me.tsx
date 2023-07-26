@@ -19,7 +19,7 @@ const Me: FC<MeProps> = () => {
         const fetchCurrentUser = async () => {
             try {
                 const token = localStorage.getItem('token')
-                const response = await fetch('http://localhost:4080/users/me', {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/me`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

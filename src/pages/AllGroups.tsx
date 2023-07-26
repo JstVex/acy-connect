@@ -18,12 +18,11 @@ const AllGroups: FC<AllGroupsProps> = () => {
 
     useEffect(() => {
         const fetchGroups = async () => {
-            const response = await fetch(`http://localhost:4080/groups/unjoined/${user?._id}`)
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/groups/unjoined/${user?._id}`)
             const data = await response.json();
 
             if (response.ok) {
                 setGroups(data)
-                console.log('groups are', groups)
             }
         }
 

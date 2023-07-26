@@ -13,7 +13,7 @@ const AllOtherEvents: FC<AllOtherEventsProps> = ({ event, user }) => {
 
     const handleParticipating = async () => {
         try {
-            const response = await fetch(`http://localhost:4080/events/${event._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/events/${event._id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
