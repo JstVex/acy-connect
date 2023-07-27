@@ -1,20 +1,27 @@
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { GroupModel, UserModel } from '../types/models';
+import { AuthContext } from '../context/AuthContext';
 
-interface UserProps {
-    props?: string
+interface ConnectionProps {
+    _id: string,
+    user1: UserModel,
+    user2: UserModel,
+    createdAt: Date
 }
 
-const User: FC<UserProps> = () => {
+const User = () => {
     const { userId } = useParams();
-    console.log('userId is', userId)
     const [user, setUser] = useState<UserModel | null>(null);
+
+    const [connection, setConnection] = useState<ConnectionProps | null>(null);
+
+    const { user: currentUser } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch(`http://localhost:4080/users/${userId}`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/${userId}`);
 
                 if (response.ok) {
                     const data = await response.json();
@@ -25,8 +32,67 @@ const User: FC<UserProps> = () => {
             }
         }
 
-        fetchUser()
-    }, [userId])
+        const fetchConnection = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/connections/${userId}/${currentUser?._id}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setConnection(data);
+                    // console.log('connection between users is', connection)
+
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        }
+
+        fetchUser();
+        fetchConnection();
+    }, [userId, currentUser?._id])
+
+    useEffect(() => {
+        console.log('connection between users is', connection)
+    }, [connection])
+
+    const sendRequest = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/users/friendrequest`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ senderId: currentUser?._id, recipientId: userId })
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Successful connection created', data)
+            }
+        } catch (error) {
+            console.error('Error sending connection request', error)
+        }
+    }
+
+    const handleUnfriend = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/connections/${connection?._id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user1Id: currentUser?._id, user2Id: userId })
+            })
+
+            if (response.ok) {
+                const body = await response.json();
+                console.log('Successfully unfriended', body)
+            }
+
+        } catch (error) {
+            console.log('Failed to unfriend', error)
+        }
+    }
 
     if (user === null) {
         return <div>Loading...</div>;
@@ -36,9 +102,9 @@ const User: FC<UserProps> = () => {
         <div className='w-full max-h-screen overflow-y-auto p-3 ' >
             <div className='flex items-center gap-x-5'>
                 {user.image ? (
-                    <img src={user.image} alt="profile" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square rounded-full' />
+                    <img src={user.image} alt="profile" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
                 ) : (
-                    <img src="/src/assets/placeholder.jpeg" alt="placeholder" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square rounded-full' />
+                    <img src="/src/assets/placeholder.jpeg" alt="placeholder" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
                 )}
 
                 <div className='flex flex-col'>
@@ -49,6 +115,16 @@ const User: FC<UserProps> = () => {
                         {user.email}
                     </div>
                 </div>
+
+                {connection === null ? (
+                    <div className='ml-auto text-lg text-amber-600 cursor-pointer' onClick={sendRequest}>
+                        Add friend
+                    </div>
+                ) : (
+                    <div className='ml-auto text-lg text-amber-600' onClick={handleUnfriend}>
+                        Unfriend
+                    </div>
+                )}
                 {/* <Settings onClick={() => setIsOpen(true)} className='ml-auto text-zinc-700' size={28} /> */}
             </div>
             {user.bio && (
@@ -65,9 +141,8 @@ const User: FC<UserProps> = () => {
             </div>
             <div className='my-3 text-lg'>
                 Currently a member of {user.groups?.length} groups including {user.groups?.map((group: GroupModel) => {
-                    console.log(group)
                     return (
-                        <span className=''>
+                        <span className='' key={group._id}>
                             {group.title}, <span> </span>
                         </span>
                     )
