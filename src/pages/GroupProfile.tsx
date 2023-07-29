@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Route, Routes, useParams } from 'react-router-dom'
 import { EventModel, GroupModel, UserModel } from '../types/models'
 import { Link } from 'react-router-dom'
 import MembersModal from '../components/all-groups/MembersModal'
@@ -7,6 +7,9 @@ import CreateEventsModal from '../components/all-groups/CreateEventsModal'
 import Event from '../components/all-groups/profile/Event'
 import GroupInvitationModal from '../components/all-groups/GroupInvitationModal'
 import { parseISO, addDays, isToday, isTomorrow } from 'date-fns';
+import InfoTabs from '../components/all-groups/profile/InfoTabs'
+import TabContent from '../components/all-groups/profile/TabContent'
+import GroupProfileLayout from '../components/all-groups/profile/GroupProfileLayout'
 
 interface GroupProfileProps {
     props?: string
@@ -35,7 +38,13 @@ const GroupProfile: FC<GroupProfileProps> = () => {
     const ongoingEvents = events.filter((event) => isToday(parseISO(event.date)));
 
     console.log('tomorrow events', tomorrowEvents);
-    console.log('today events', ongoingEvents)
+    console.log('today events', ongoingEvents);
+
+    const tabRoutes = [
+        { path: `/groups/${groupId}`, label: 'About' },
+        { path: `/groups/${groupId}/members`, label: 'Members' },
+        { path: `/groups/${groupId}/events`, label: 'Events' }
+    ];
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -169,15 +178,15 @@ const GroupProfile: FC<GroupProfileProps> = () => {
             <MembersModal isOpen={membersModalIsOpen} onClose={() => setMembersModalIsOpen(false)} members={group.members} currentUser={user} mutual={mutualFriends} />
             <CreateEventsModal isOpen={eventsModalIsOpen} setIsOpen={setEventsModalIsOpen} onClose={() => setEventsModalIsOpen(false)} groupId={groupId} />
             <GroupInvitationModal isOpen={invitationModalIsOpen} setIsOpen={setInvitationModalIsOpen} onClose={() => setInvitationModalIsOpen(false)} mutuals={allMutuals} user={user} currentGroup={group} />
-            <div className="w-full max-h-screen overflow-y-auto p-3">
+            {/* <div className="w-full max-h-screen overflow-y-auto p-3">
                 <div className="flex items-center mb-4">
                     <h3 className="text-4xl capitalize font-semibold">
                         {group.title}
                     </h3>
 
-                    {/* <Link to={`/ connections / ${ group.owner._id }`} className="ml-auto text-lg text-amber-600">
+                    <Link to={`/ connections / ${ group.owner._id }`} className="ml-auto text-lg text-amber-600">
                         Owned by: <span className="capitalize">{group.owner.name}</span>
-                    </Link> */}
+                    </Link>
                     {isMember ? (
                         <div className='ml-auto bg-amber-800 text-white rounded-3xl px-3 py-2 text-xs sm:text-sm' onClick={handleGroupLeave}>
                             Leave group
@@ -239,7 +248,15 @@ const GroupProfile: FC<GroupProfileProps> = () => {
                         return <Event key={event._id} event={event} user={user} />;
                     })}
                 </ul>
-            </div>
+            </div> */}
+            <GroupProfileLayout title={group.title} description={group.description} tabRoutes={tabRoutes}>
+                <Routes>
+                    {tabRoutes.map((tab) => (
+                        <Route key={tab.path} path={tab.path} element={<TabContent title={group.title} description={group.description} tabRoutes={tabRoutes} label={tab.label} />} />
+                    ))}
+                </Routes>
+            </GroupProfileLayout>
+
         </>
     )
 }
