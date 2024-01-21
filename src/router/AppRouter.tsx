@@ -18,10 +18,10 @@ function AppRouter() {
 
     return (
         <Router>
-            <div className='flex gap-x-2 bg-amber-50'>
+            <div className='flex gap-x-0 sm:gap-x-2 bg-amber-50 pr-0 sm:pr-2'>
                 {user && <Sidebar />}
                 <Routes>
-                    <Route path="/groups" element={
+                    <Route path="/" element={
                         <ProtectedRoute>
                             <AllGroups />
                         </ProtectedRoute>}
@@ -56,7 +56,7 @@ function AppRouter() {
                             <User />
                         </ProtectedRoute>
                     } />
-                    <Route path='/groups/:groupId' element={
+                    <Route path='/groups/:groupId/*' element={
                         <ProtectedRoute>
                             <GroupProfile />
                         </ProtectedRoute>

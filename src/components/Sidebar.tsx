@@ -49,7 +49,7 @@ function Sidebar() {
                 </h4>
                 <ul className={clsx('flex flex-col text-lg px-3', isOpen ? 'opacity-100' : 'opacity-0', 'transition-opacity duration-100 ease-in-out')}>
                     <li className="py-1 border-b-2 border-amber-800">
-                        <Link to="/groups" onClick={() => {
+                        <Link to="/" onClick={() => {
                             if (windowWidth < 640) {
                                 setIsOpen(false);
                             }
