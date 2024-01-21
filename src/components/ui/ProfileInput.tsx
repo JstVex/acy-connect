@@ -7,7 +7,7 @@ interface ProfileInputProps {
     value: string | undefined;
     label: string;
     type: string;
-    onChange: any;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     placeholder: string;
     className?: string;
 }

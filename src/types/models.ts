@@ -9,8 +9,10 @@ export interface UserModel {
     hobbies?: string
     activeDay?: string
     groups?: GroupModel[]
-    connections: any[]
+    connections: UserModel[]
     events?: EventModel[]
+    user1?: UserModel,
+    user2?: UserModel,
     notifications?: {
         _id: string;
         type: string;
@@ -34,7 +36,7 @@ export interface GroupModel {
     _id: string;
     title: string;
     description: string;
-    owner: any;
+    owner: UserModel;
     time: string;
     date: string;
     place: string;
@@ -55,6 +57,6 @@ export interface EventModel {
     description?: string;
     date: string;
     time?: string;
-    group: string;
+    group: GroupModel;
     participants: UserModel[];
 }
