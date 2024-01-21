@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { UserModel } from '../types/models';
 import Notification from '../components/notifications/Notification';
 import Tabs from '../components/Tabs';
+import Loading from '../components/Loading';
 
 interface NotificationsProps {
     _id: string;
@@ -52,7 +53,7 @@ const Notifications = () => {
     }, [user?.notifications])
 
     if (user === null) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     return (

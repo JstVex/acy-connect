@@ -6,7 +6,7 @@ import Tabs from '../components/Tabs';
 import SearchBar from '../components/all-groups/SearchBar';
 import { addDays, isAfter, isBefore, isToday, isTomorrow, parseISO } from 'date-fns';
 import DateFilter from '../components/DateFilter';
-import MajorEvents from '../components/events/MajorEvents';
+import Loading from '../components/Loading';
 
 enum EventFilter {
     ALL = 'All',
@@ -55,7 +55,6 @@ const Events = () => {
     const handleDateFilterChange = useCallback((selectedFilter: EventFilter) => {
         setSelectedDateFilter(selectedFilter);
 
-        // Apply the selected date filter on the already filtered events
         const filteredParticipated = filterEventsByDate(participatedEvents, selectedFilter);
         setFilteredParticipatedEvents(filteredParticipated);
 
@@ -106,15 +105,12 @@ const Events = () => {
 
     if (user === null) {
         return (
-            <div>
-                Loading...
-            </div>
+            <Loading />
         )
     }
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>
-            {/* <MajorEvents /> */}
             <div className='flex gap-x-2 sm:gap-x-5 items-center'>
                 <SearchBar setFiltered={setTotalFilterForParticipatedEvents} filterField={filteredParticipatedEvents} setFiltered2={setTotalFilterForAllOtherEvents} filterField2={filteredAllOtherEvents} setSearchValue={setSearchValue} filterBy={'event title'} placeholder={'Search Events'} />
                 <DateFilter selectedDateFilter={selectedDateFilter} handleDateFilterChange={handleDateFilterChange} />

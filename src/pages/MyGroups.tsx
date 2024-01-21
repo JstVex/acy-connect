@@ -3,6 +3,7 @@ import SearchBar from '../components/all-groups/SearchBar'
 import { GroupModel, UserModel } from '../types/models'
 import Tabs from '../components/Tabs'
 import Group from '../components/Group'
+import Loading from '../components/Loading'
 
 const MyGroups = () => {
     const [ownedGroups, setOwnedGroups] = useState<GroupModel[]>([]);
@@ -59,6 +60,10 @@ const MyGroups = () => {
             setFilteredJoinedGroups([]);
         }
     }, [searchValue]);
+
+    if (ownedGroups === null || joinedGroups === null || currentUser === null) {
+        return <Loading />
+    }
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>

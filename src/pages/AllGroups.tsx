@@ -1,15 +1,12 @@
-import { FC, useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import SearchBar from '../components/all-groups/SearchBar'
 import CreateNewGroup from '../components/all-groups/CreateNewGroup'
 import Group from '../components/Group'
 import { GroupModel } from '../types/models'
 import { AuthContext } from '../context/AuthContext'
+import Loading from '../components/Loading'
 
-interface AllGroupsProps {
-    props?: string
-}
-
-const AllGroups: FC<AllGroupsProps> = () => {
+const AllGroups = () => {
     const [groups, setGroups] = useState<GroupModel[]>([]);
     const [filteredGroups, setFilteredGroups] = useState<GroupModel[]>(groups);
     const [searchValue, setSearchValue] = useState('');
@@ -34,6 +31,10 @@ const AllGroups: FC<AllGroupsProps> = () => {
             setFilteredGroups([]);
         }
     }, [searchValue]);
+
+    if (user === null || groups.length === 0) {
+        return <Loading />;
+    }
 
     return (
         <div className='w-full max-h-screen overflow-y-auto p-3'>

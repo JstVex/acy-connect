@@ -4,6 +4,7 @@ import { Settings } from 'lucide-react'
 import SettingsModal from '../components/me/SettingsModal'
 // import Group from '../components/Group'
 import { AuthContext } from '../context/AuthContext'
+import Loading from '../components/Loading'
 
 interface MeProps {
     props?: string
@@ -41,56 +42,62 @@ const Me: FC<MeProps> = () => {
     }, [])
 
     if (user === null) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     console.log(user.groups)
     return (
         <>
             <SettingsModal isOpen={isOpen} setIsOpen={setIsOpen} onClose={() => setIsOpen(false)} user={user} />
-            <div className='w-full max-h-screen overflow-y-auto p-3 ' >
+            <div className='w-full max-h-screen overflow-y-auto p-3'>
                 <div className='flex items-center gap-x-5'>
-                    {user.image ? (
-                        <img src={user.image} alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
-                    ) : (
-                        <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
-                    )}
+                    <div className='flex flex-1 items-center gap-x-5 bg-white rounded-3xl shadow-sm py-3 px-5 ring-1 ring-gray-200'>
+                        {user.image ? (
+                            <img src={user.image} alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
+                        ) : (
+                            <img src="/src/assets/placeholder.jpeg" alt="" className='w-auto h-auto max-w-[100px] max-h-[100px] aspect-square object-cover rounded-full' />
+                        )}
 
-                    <div className='flex flex-col'>
-                        <div className='text-2xl'>
-                            {user.name}
+                        <div className='flex flex-col'>
+                            <div className='text-2xl'>
+                                {user.name}
+                            </div>
+                            <div className='font-light'>
+                                {user.email}
+                            </div>
                         </div>
-                        <div className='font-light'>
-                            {user.email}
-                        </div>
+                        <Settings onClick={() => setIsOpen(true)} className='ml-auto text-zinc-700' size={25} />
                     </div>
-                    <Settings onClick={() => setIsOpen(true)} className='ml-auto text-zinc-700' size={28} />
+                    <button onClick={logout}>
+                        Logout
+                    </button>
                 </div>
-                <div className='text-center text-xl font-light my-5'>
-                    ~{user.bio}~
-                </div>
-                <div className='my-3 text-lg'>
-                    Hobbies: {user.hobbies}
-                </div>
-                <div className='my-3 text-lg'>
-                    Usual active day at acy: {user.activeDay}
-                </div>
-                <div className='my-3 text-lg'>
-                    Currently a member of {user.groups?.length} groups including {user.groups?.map((group: GroupModel) => {
-                        console.log(group)
-                        return (
-                            <span className=''>
-                                {group.title}, <span> </span>
+                <div className='mt-5 bg-white rounded-3xl shadow-sm py-3 px-5 ring-1 ring-gray-200'>
+                    <div className='text-center text-2xl font-light text-amber-800 my-5'>
+                        {user.bio && (
+                            <div className='text-center text-xl font-light my-5'>
+                                {user.bio}
+                            </div>
+                        )}
+                    </div>
+                    <div className='my-3 text-base'>
+                        <span className='font-semibold'>Hobbies:</span> {user.hobbies}
+                    </div>
+                    <div className='my-3 text-base'>
+                        <span className='font-semibold'>Usual active day at acy:</span> {user.activeDay}
+                    </div>
+                    <div className='my-3 text-base'>
+                        <span className='font-semibold'>Currently a member of</span> {user.groups?.length} groups including
+                        {user.groups?.map((group: GroupModel, index: number) => (
+                            <span key={index} className='inline-block bg-gray-200 rounded-full px-3 py-1 mx-1 my-1'>
+                                {group.title}
                             </span>
-                        )
-                    })}
+                        ))}
+                    </div>
+                    <div className='my-3 text-base'>
+                        <span className='font-semibold'>Have made</span> {user.connections?.length} connections
+                    </div>
                 </div>
-                <div className='my-3 text-lg'>
-                    Have made {user.connections?.length} connections
-                </div>
-                <button onClick={logout}>
-                    Logout
-                </button>
             </div>
         </>
 
