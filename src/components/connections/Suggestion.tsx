@@ -28,25 +28,6 @@ const Suggestion: FC<SuggestionProps> = ({ user, currentUser }) => {
         }
     }
 
-    // const handleConnect = async () => {
-    //     try {
-    //         const response = await fetch(`${ import.meta.env.VITE_BASE_URL } / connections', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify({ user1Id: currentUser?._id, user2Id: user._id })
-    //         })
-
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             console.log('Successful connection created', data)
-    //         }
-    //     } catch (error) {
-    //         console.error('Error creating connection', error)
-    //     }
-    // }
-
     const friendRequest = user.notifications?.some((notification) => {
         return notification.type === 'connection_request' &&
             notification.sender === currentUser?._id &&

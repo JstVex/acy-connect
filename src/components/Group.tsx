@@ -14,7 +14,6 @@ const Group: FC<GroupProps> = ({ group, currentUser }) => {
     const members = group.members;
     const totalMembers = members.length;
     const totalMutuals = mutualFriends.length;
-    console.log('members are', group.members)
 
     const renderMemberImages = () => {
         const maxDisplayedMembers = 4;
@@ -87,7 +86,6 @@ const Group: FC<GroupProps> = ({ group, currentUser }) => {
 
         fetchMutualFriends();
     }, [currentUser?._id, group._id])
-
 
     return (
         <li className="flex flex-col bg-white rounded-3xl shadow-sm py-3 px-5 ring-1 ring-gray-200">
