@@ -11,7 +11,7 @@ const CreateNewGroup: FC<CreateNewGroupProps> = ({ user }) => {
     return (
         <>
             <CreateNewGroupModal isOpen={isOpen} setIsOpen={setIsOpen} onClose={() => setIsOpen(false)} user={user} />
-            <button onClick={() => setIsOpen(true)}>
+            <button onClick={() => setIsOpen(true)} className='w-20 sm:w-auto'>
                 Create a new group
             </button>
         </>
