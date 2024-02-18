@@ -100,9 +100,7 @@ const Me: FC<MeProps> = () => {
                 </div>
             </div>
         </>
-
-
     )
 }
 
-export default Me
+export default Me;
