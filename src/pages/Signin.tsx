@@ -46,7 +46,6 @@ const Signin = () => {
                     const data = await response.json();
                     login(data);
                     navigate('/groups');
-                    console.log(data);
 
                 } else {
                     const errorData = await response.json();
