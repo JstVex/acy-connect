@@ -45,7 +45,7 @@ const AllGroups = () => {
             {searchValue.trim() !== '' && filteredGroups.length === 0 && (
                 <p className='text-lg mt-3 text-gray-500'>There is no group with the title you are searching for.</p>
             )}
-            <ul className='mt-5 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-5'>
+            <ul className='mt-5 grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-5'>
                 {(searchValue.trim() === '' ? groups : filteredGroups).map(group => {
                     return <Group key={group._id} group={group} currentUser={user} />
                 })}
